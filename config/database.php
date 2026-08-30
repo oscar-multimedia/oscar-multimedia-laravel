@@ -58,8 +58,8 @@ return [
             'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? [
-                1008 /* PDO::MYSQL_ATTR_SSL_CA */ => env('MYSQL_ATTR_SSL_CA', base_path('cacert.pem')),
-                1014 /* PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT */ => env('DB_SSL_VERIFY', false),
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', base_path('cacert.pem')),
+                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => env('DB_SSL_VERIFY', false),
             ] : [],
         ],
 
