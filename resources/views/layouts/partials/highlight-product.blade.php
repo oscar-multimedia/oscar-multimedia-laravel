@@ -19,7 +19,7 @@
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     @php
                         $imageUrl = $product->foto 
-                                    ? Storage::url($product->foto) 
+                                    ? cloudinary_url($product->foto) 
                                     : asset('images/default.png'); // fallback jika foto null
                         $kategoriNama = $product->kategori->nama_kategori ?? 'Tanpa Kategori';
                     @endphp

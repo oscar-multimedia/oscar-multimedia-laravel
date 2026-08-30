@@ -22,7 +22,7 @@
             <label>Logo</label>
             <input type="file" name="logo" class="form-control">
             @if (!empty($profile->logo))
-                <img src="{{ asset('storage/' . $profile->logo) }}" alt="Logo" width="150" class="mt-3 mb-3">
+                <img src="{{ cloudinary_url($profile->logo) }}" alt="Logo" width="150" class="mt-3 mb-3">
             @endif
         </div>
 

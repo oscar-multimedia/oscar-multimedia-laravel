@@ -7,7 +7,7 @@
                 <div class="card h-100 shadow-sm position-relative overflow-hidden hover-card">
 
                     {{-- Gambar Produk (SUDAH DIPERBAIKI) --}}
-                    <img src="{{ asset('storage/' . $produk->foto) }}" 
+                    <img src="{{ cloudinary_url($produk->foto) }}" 
                          class="card-img-top product-image"  {{-- Hapus style inline, tambahkan class baru --}}
                          alt="{{ $produk->nama_produk }}">
 

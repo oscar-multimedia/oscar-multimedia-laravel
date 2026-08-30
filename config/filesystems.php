@@ -60,6 +60,13 @@ return [
             'report' => false,
         ],
 
+        'cloudinary' => [
+            'driver' => 'cloudinary',
+            'cloud' => env('EXTERNAL_S3_CLOUDINARY_NAME'),
+            'key' => env('EXTERNAL_S3_CLOUDINARY_API_KEY'),
+            'secret' => env('EXTERNAL_S3_CLOUDINARY_API_SECRET'),
+        ],
+
     ],
 
     /*

@@ -3,7 +3,7 @@
         <div class="popup-content-image">
             <button id="closePopupBtn" class="popup-close-btn">&times;</button>
 
-            <img src="{{ asset('storage/' . $activePopup->image_path) }}" alt="Informasi Penting" class="popup-image">
+            <img src="{{ cloudinary_url($activePopup->image_path) }}" alt="Informasi Penting" class="popup-image">
         </div>
     </div>
 @endif

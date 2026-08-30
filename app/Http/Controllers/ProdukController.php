@@ -35,7 +35,7 @@ class ProdukController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('produk', 'public');
+            $data['foto'] = $request->file('foto')->store('produk', 'cloudinary');
         }
 
         Produk::create($data);
@@ -60,9 +60,9 @@ class ProdukController extends Controller
 
         if ($request->hasFile('foto')) {
             if ($produk->foto) {
-                Storage::disk('public')->delete($produk->foto);
+                Storage::disk('cloudinary')->delete($produk->foto);
             }
-            $data['foto'] = $request->file('foto')->store('produk', 'public');
+            $data['foto'] = $request->file('foto')->store('produk', 'cloudinary');
         }
 
         $produk->update($data);
@@ -73,7 +73,7 @@ class ProdukController extends Controller
     public function destroy(Produk $produk)
     {
         if ($produk->foto) {
-            Storage::disk('public')->delete($produk->foto);
+            Storage::disk('cloudinary')->delete($produk->foto);
         }
         $produk->delete();
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus');

@@ -33,8 +33,16 @@ class ProfileController extends Controller
             'konten' => $request->konten,
         ];
 
+        $profile = Profile::first();
+
         if ($request->hasFile('logo')) {
-            $logoPath = $request->file('logo')->store('logo', 'public');
+            // Hapus logo lama dari Cloudinary jika ada
+            if ($profile && $profile->logo) {
+                Storage::disk('cloudinary')->delete($profile->logo);
+            }
+            
+            // Upload logo baru ke Cloudinary
+            $logoPath = $request->file('logo')->store('logo', 'cloudinary');
             $data['logo'] = $logoPath;
         }
 

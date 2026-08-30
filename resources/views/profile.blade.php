@@ -31,7 +31,7 @@
 <div class="container text-center px-4 my-5 profile-container">
     {{-- Logo --}}
     @if ($profile->logo)
-        <img src="{{ asset('storage/' . $profile->logo) }}" alt="Oscar Multimedia" class="profile-logo">
+        <img src="{{ cloudinary_url($profile->logo) }}" alt="Oscar Multimedia" class="profile-logo">
     @endif
 
     {{-- Judul Profil --}}

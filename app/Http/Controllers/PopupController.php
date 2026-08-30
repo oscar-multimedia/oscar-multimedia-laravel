@@ -36,8 +36,8 @@ class PopupController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Simpan gambar ke storage/app/public/popups
-            $path = $request->file('image')->store('popups', 'public');
+            // Simpan gambar ke Cloudinary
+            $path = $request->file('image')->store('popups', 'cloudinary');
 
             // Buat record baru di database
             Popup::create(['image_path' => $path]);
@@ -70,8 +70,8 @@ class PopupController extends Controller
      */
     public function destroy(Popup $popup)
     {
-        // Hapus file dari storage
-        Storage::disk('public')->delete($popup->image_path);
+        // Hapus file dari storage Cloudinary
+        Storage::disk('cloudinary')->delete($popup->image_path);
 
         // Hapus record dari database
         $popup->delete();

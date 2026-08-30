@@ -33,7 +33,7 @@
     <div class="card-body text-center">
         @if ($activePopup)
             <p class="text-muted">Ini adalah gambar yang akan muncul sebagai pop-up di halaman pengunjung.</p>
-            <img src="{{ asset('storage/' . $activePopup->image_path) }}" alt="Pop-up Aktif" class="img-fluid rounded shadow" style="max-height: 300px;">
+            <img src="{{ cloudinary_url($activePopup->image_path) }}" alt="Pop-up Aktif" class="img-fluid rounded shadow" style="max-height: 300px;">
         @else
             <p class="my-4">Saat ini tidak ada pop-up yang aktif.</p>
         @endif
@@ -60,7 +60,7 @@
                     @forelse ($popups as $popup)
                         <tr>
                             <td>
-                                <img src="{{ asset('storage/' . $popup->image_path) }}" alt="Preview" width="150" class="img-thumbnail">
+                                <img src="{{ cloudinary_url($popup->image_path) }}" alt="Preview" width="150" class="img-thumbnail">
                             </td>
                             <td><code>{{ $popup->image_path }}</code></td>
                             <td>
