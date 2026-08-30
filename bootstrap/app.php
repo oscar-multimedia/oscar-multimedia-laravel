@@ -13,7 +13,7 @@ if (!function_exists('cloudinary_url')) {
     }
 }
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -25,3 +25,20 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+
+// Vercel read-only filesystem fix
+if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
+    $app->useStoragePath('/tmp/storage');
+    
+    $_SERVER['APP_SERVICES_CACHE'] = '/tmp/services.php';
+    $_SERVER['APP_PACKAGES_CACHE'] = '/tmp/packages.php';
+    $_SERVER['APP_CONFIG_CACHE'] = '/tmp/config.php';
+    $_SERVER['APP_ROUTES_CACHE'] = '/tmp/routes.php';
+    $_SERVER['APP_EVENTS_CACHE'] = '/tmp/events.php';
+    $_SERVER['VIEW_COMPILED_PATH'] = '/tmp/views';
+    $_SERVER['CACHE_STORE'] = 'array'; // Hindari menulis ke file cache
+    $_SERVER['SESSION_DRIVER'] = 'cookie'; // Hindari menulis file session
+    $_SERVER['LOG_CHANNEL'] = 'stderr'; // Log ke Vercel console, bukan file
+}
+
+return $app;
