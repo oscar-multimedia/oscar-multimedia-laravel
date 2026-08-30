@@ -2,7 +2,12 @@
     <div class="container-fluid px-4">
         {{-- Logo --}}
         <a class="navbar-brand" href="{{ url('/') }}">
-            <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" style="height: 70px;">
+            @php $profileData = \App\Models\Profile::first(); @endphp
+            @if($profileData && $profileData->logo)
+                <img src="{{ cloudinary_url($profileData->logo) }}" alt="Oscar Multimedia" style="height: 70px; object-fit: contain;">
+            @else
+                <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" style="height: 70px;">
+            @endif
         </a>
 
         {{-- Tombol Toggler untuk Mobile --}}
