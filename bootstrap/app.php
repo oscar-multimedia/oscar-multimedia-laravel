@@ -28,6 +28,9 @@ $app = Application::configure(basePath: dirname(__DIR__))
 
 // Vercel read-only filesystem fix
 if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
+    // Suppress PHP 8.4+ deprecation warnings to prevent HTTP 500
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
+
     $app->useStoragePath('/tmp/storage');
     
     $_SERVER['APP_SERVICES_CACHE'] = '/tmp/services.php';
@@ -39,6 +42,15 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
     $_SERVER['CACHE_STORE'] = 'array'; // Hindari menulis ke file cache
     $_SERVER['SESSION_DRIVER'] = 'cookie'; // Hindari menulis file session
     $_SERVER['LOG_CHANNEL'] = 'stderr'; // Log ke Vercel console, bukan file
+
+    // Foolproof TiDB SSL Fix: Download fresh CA with UNIX line endings to /tmp
+    $caPath = '/tmp/cacert.pem';
+    if (!file_exists($caPath)) {
+        $caContent = file_get_contents('https://curl.se/ca/cacert.pem');
+        file_put_contents($caPath, $caContent);
+    }
+    $_SERVER['MYSQL_ATTR_SSL_CA'] = $caPath;
+    $_ENV['MYSQL_ATTR_SSL_CA'] = $caPath;
 }
 
 return $app;
