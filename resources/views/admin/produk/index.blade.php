@@ -32,7 +32,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         @if ($produk->foto)
-                            <img src="{{ asset('storage/' . $produk->foto) }}" class="img-thumbnail" style="max-width: 100px;">
+                            <img src="{{ cloudinary_url($produk->foto) }}" class="img-thumbnail" style="max-width: 100px;">
                         @else
                             <span class="text-muted fst-italic">Belum ada foto</span>
                         @endif

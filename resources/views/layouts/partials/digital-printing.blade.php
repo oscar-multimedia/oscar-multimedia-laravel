@@ -13,7 +13,7 @@
                                 <div class="col">
                                     <div class="product-grid-card position-relative overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                                         <div class="image-wrapper">
-                                            <img src="{{ asset('storage/' . $product->foto) }}" 
+                                            <img src="{{ cloudinary_url($product->foto) }}" 
                                                  alt="{{ $product->nama_produk }}" 
                                                  class="product-image">
                                         </div>

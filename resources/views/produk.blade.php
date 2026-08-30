@@ -90,7 +90,7 @@
                         <div class="card h-100 border-0 shadow-sm overflow-hidden">
                             {{-- Gambar dengan overlay hover --}}
                             <div class="position-relative">
-                                <img src="{{ $produk->foto ? asset('storage/' . $produk->foto) : asset('images/default.png') }}" 
+                                <img src="{{ $produk->foto ? cloudinary_url($produk->foto) : asset('images/default.png') }}" 
                                      class="card-img-top" 
                                      alt="{{ $produk->nama_produk }}" 
                                      style="height: 220px; object-fit: cover;">

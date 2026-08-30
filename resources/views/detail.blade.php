@@ -10,7 +10,7 @@
                 <!-- Bagian Gambar -->
                 <div class="col-md-6 text-center">
                     <div class="p-3 bg-light rounded-4 shadow-sm">
-                        <img src="{{ asset('storage/' . $produk->foto) }}" 
+                        <img src="{{ cloudinary_url($produk->foto) }}" 
                              class="img-fluid rounded-3" 
                              alt="{{ $produk->nama_produk }}" 
                              style="max-height: 320px; object-fit: contain;">
