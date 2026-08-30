@@ -43,14 +43,9 @@ if (isset($_ENV['VERCEL']) || isset($_SERVER['VERCEL'])) {
     $_SERVER['SESSION_DRIVER'] = 'cookie'; // Hindari menulis file session
     $_SERVER['LOG_CHANNEL'] = 'stderr'; // Log ke Vercel console, bukan file
 
-    // Foolproof TiDB SSL Fix: Download fresh CA with UNIX line endings to /tmp
-    $caPath = '/tmp/cacert.pem';
-    if (!file_exists($caPath)) {
-        $caContent = file_get_contents('https://curl.se/ca/cacert.pem');
-        file_put_contents($caPath, $caContent);
-    }
-    $_SERVER['MYSQL_ATTR_SSL_CA'] = $caPath;
-    $_ENV['MYSQL_ATTR_SSL_CA'] = $caPath;
+    // Gunakan CA bundle bawaan sistem Linux Vercel (sudah pasti ada)
+    putenv('MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt');
+    $_ENV['MYSQL_ATTR_SSL_CA'] = '/etc/ssl/certs/ca-certificates.crt';
 }
 
 return $app;

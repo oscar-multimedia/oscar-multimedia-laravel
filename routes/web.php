@@ -9,41 +9,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KategoriController;
 
-// ========== TEMPORARY DEBUG ROUTE - DELETE AFTER USE ==========
-Route::get('/debug-ssl', function () {
-    $paths = [
-        '/etc/ssl/certs/ca-certificates.crt',
-        '/etc/ssl/certs/ca-bundle.crt',
-        '/etc/pki/tls/certs/ca-bundle.crt',
-        '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem',
-        '/usr/local/etc/openssl/cert.pem',
-        '/usr/local/etc/ssl/cert.pem',
-    ];
-    
-    $result = [
-        'php_version'  => PHP_VERSION,
-        'openssl_version' => defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : 'N/A',
-        'pdo_mysql_loaded' => extension_loaded('pdo_mysql'),
-        'MYSQL_ATTR_SSL_CA_const' => defined('PDO::MYSQL_ATTR_SSL_CA') ? PDO::MYSQL_ATTR_SSL_CA : 'N/A',
-        'ca_paths_found' => [],
-        'env_MYSQL_ATTR_SSL_CA' => env('MYSQL_ATTR_SSL_CA', 'NOT SET'),
-    ];
-    
-    foreach ($paths as $path) {
-        $result['ca_paths_found'][$path] = file_exists($path) ? 'EXISTS ✓' : 'NOT FOUND ✗';
-    }
-    
-    // Test koneksi DB
-    try {
-        DB::connection()->getPdo();
-        $result['db_connection'] = 'SUCCESS ✓';
-    } catch (\Exception $e) {
-        $result['db_connection'] = 'FAILED: ' . $e->getMessage();
-    }
-    
-    return response()->json($result, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-});
-// ========== END DEBUG ROUTE ==========
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
