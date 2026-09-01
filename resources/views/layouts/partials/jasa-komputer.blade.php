@@ -32,7 +32,7 @@
     <h2 class="text-center section-title mb-4">SERVICE & ACCESSORIS COMPUTER</h2>
 
     <div class="jasa-komputer-wrapper">
-            <img src="{{ asset('jasa komputer.png') }}"
+            <img src="{{ asset('jasa-komputer.png') }}"
                  alt="Jasa Komputer"
                  class="jasa-komputer-image img-fluid">
 
