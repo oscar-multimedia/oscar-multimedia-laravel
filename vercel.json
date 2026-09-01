@@ -20,6 +20,10 @@
             "dest": "/public/$1/$2"
         },
         {
+            "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp))$",
+            "dest": "/public/$1"
+        },
+        {
             "src": "/(.*)",
             "dest": "/api/index.php"
         }
