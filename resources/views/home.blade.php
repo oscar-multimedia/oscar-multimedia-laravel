@@ -49,6 +49,13 @@
                     closePopup();
                 }
             });
+
+            // Tutup pop-up saat tombol Escape ditekan
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && popupOverlay.classList.contains('show')) {
+                    closePopup();
+                }
+            });
         }
     });
 </script>

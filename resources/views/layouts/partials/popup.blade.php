@@ -1,13 +1,13 @@
 @if(isset($activePopup) && $activePopup)
     <div id="infoPopupOverlay" class="popup-overlay" role="dialog" aria-modal="true" aria-label="Informasi Penting">
         <div class="popup-content-image">
-            <button id="closePopupBtn" class="popup-close-btn" type="button" aria-label="Tutup Informasi Penting">&times;</button>
+            <button id="closePopupBtn" class="popup-close-btn" type="button" aria-label="Tutup Informasi Penting">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
 
-            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_600,c_limit') }}" 
+            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_800,c_limit') }}" 
                  alt="Informasi Penting" 
                  class="popup-image" 
-                 width="600" 
-                 height="400" 
                  loading="eager" 
                  fetchpriority="high" 
                  decoding="async">
@@ -18,19 +18,20 @@
 <style>
     .popup-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
+        inset: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.75);
+        background-color: rgba(15, 23, 42, 0.72);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        padding: 20px;
+        padding: 16px;
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.25s ease;
+        transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .popup-overlay.show {
@@ -40,46 +41,62 @@
 
     .popup-content-image {
         position: relative;
-        background: transparent;
-        padding: 0;
-        border-radius: 10px;
-        max-width: 90vw;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
+        overflow: hidden;
+        max-width: min(580px, 92vw);
         max-height: 85vh;
-        width: min(600px, 90vw);
-        aspect-ratio: 600 / 400;
-        contain: layout paint;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: scale(0.92) translateY(12px);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .popup-overlay.show .popup-content-image {
+        transform: scale(1) translateY(0);
     }
 
     .popup-image {
         display: block;
         width: 100%;
-        height: 100%;
-        aspect-ratio: 600 / 400;
-        max-width: 100%;
+        height: auto;
+        max-width: min(580px, 92vw);
         max-height: 85vh;
         object-fit: contain;
-        margin: 0 auto;
-        border-radius: 10px;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
     }
 
     .popup-close-btn {
         position: absolute;
-        top: -18px;
-        right: -18px;
-        width: 40px;
-        height: 40px;
-        background-color: #fff;
-        border: none;
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+        background: #e8b535;
+        color: #ffffff;
+        border: 2px solid #c4951d;
         border-radius: 50%;
-        font-size: 24px;
+        font-size: 15px;
         font-weight: bold;
-        color: #333;
-        cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        z-index: 10;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 20;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22), 0 2px 8px rgba(232, 181, 53, 0.4);
+    }
+
+    .popup-close-btn:hover {
+        background: #d4a32b;
+        color: #ffffff;
+        border-color: #a87610;
+        transform: scale(1.12) rotate(90deg);
+        box-shadow: 0 6px 22px rgba(212, 163, 43, 0.6);
+    }
+
+    .popup-close-btn:active {
+        transform: scale(0.95) rotate(90deg);
     }
 </style>
