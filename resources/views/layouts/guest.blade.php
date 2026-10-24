@@ -22,12 +22,23 @@
     {{-- Judul halaman bisa dibuat dinamis --}}
     <title>@yield('title', 'Oscar Multimedia')</title>
 
-    {{-- CSS Framework: Self-hosted local asset for zero 3rd-party latency --}}
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    {{-- CSS Framework: Preload + Non-blocking with print media switch --}}
+    <link rel="preload" href="{{ asset('css/bootstrap.min.css') }}" as="style">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"></noscript>
+
+    {{-- Bootstrap Icons --}}
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
 
     <style>
+        @font-face {
+            font-family: "bootstrap-icons";
+            font-display: swap;
+            src: url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2") format("woff2"),
+                 url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff") format("woff");
+        }
+
         /* CSS Root & Responsive Layout Spacing */
         :root {
             --navbar-offset: 65px;
