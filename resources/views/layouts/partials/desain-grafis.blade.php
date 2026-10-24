@@ -6,14 +6,14 @@
             <div class="col-md-3 col-6 product-item my-3 @if($index >= 4) d-none product-toggleable @endif">
                 <div class="card h-100 shadow-sm position-relative overflow-hidden hover-card">
 
-                    <img src="{{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_350,h_350,c_fill') }}" 
-                         srcset="{{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_200,h_200,c_fill') }} 200w,
-                                 {{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_350,h_350,c_fill') }} 350w"
-                         sizes="(max-width: 576px) 200px, 350px"
+                    <img src="{{ cloudinary_url($produk->foto, 'f_webp,q_auto,w_250,h_250,c_fill') }}" 
+                         srcset="{{ cloudinary_url($produk->foto, 'f_webp,q_auto,w_160,h_160,c_fill') }} 160w,
+                                 {{ cloudinary_url($produk->foto, 'f_webp,q_auto,w_250,h_250,c_fill') }} 250w"
+                         sizes="(max-width: 576px) 160px, 250px"
                          class="card-img-top product-image"
                          alt="{{ $produk->nama_produk }}"
-                         width="350"
-                         height="350"
+                         width="250"
+                         height="250"
                          loading="lazy"
                          decoding="async">
 

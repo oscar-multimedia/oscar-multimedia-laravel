@@ -5,9 +5,10 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 if (!function_exists('cloudinary_url')) {
-    function cloudinary_url($path, $transformations = 'f_auto,q_auto') {
+    function cloudinary_url($path, $transformations = 'f_webp,q_auto') {
         if (!$path) return '';
-        $trans = $transformations ? trim($transformations, '/') : 'f_auto,q_auto';
+        $trans = $transformations ? trim($transformations, '/') : 'f_webp,q_auto';
+        $trans = str_replace('f_auto', 'f_webp', $trans);
 
         // Jika path sudah berupa URL Cloudinary lengkap (misal tersimpan di DB)
         if (str_contains($path, 'res.cloudinary.com')) {

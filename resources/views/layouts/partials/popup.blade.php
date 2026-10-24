@@ -1,18 +1,26 @@
 @if(isset($activePopup) && $activePopup)
+    @php
+        $popupImageUrl = cloudinary_url($activePopup->image_path, 'f_webp,q_auto,w_380,c_limit');
+    @endphp
+
+    @push('preload')
+        <link rel="preload" as="image" href="{{ $popupImageUrl }}" fetchpriority="high">
+    @endpush
+
     <div id="infoPopupOverlay" class="popup-overlay" role="dialog" aria-modal="true" aria-label="Informasi Penting">
         <div class="popup-content-image">
             <button id="closePopupBtn" class="popup-close-btn" type="button" aria-label="Tutup Informasi Penting">
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
             </button>
 
-            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_500,c_limit') }}" 
-                 srcset="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_380,c_limit') }} 380w,
-                         {{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_500,c_limit') }} 500w"
-                 sizes="(max-width: 576px) 380px, 500px"
+            <img src="{{ $popupImageUrl }}" 
+                 srcset="{{ cloudinary_url($activePopup->image_path, 'f_webp,q_auto,w_380,c_limit') }} 380w,
+                         {{ cloudinary_url($activePopup->image_path, 'f_webp,q_auto,w_500,c_limit') }} 500w"
+                 sizes="(max-width: 576px) 380px, 480px"
                  alt="Informasi Penting" 
                  class="popup-image" 
-                 width="500" 
-                 height="500" 
+                 width="380" 
+                 height="380" 
                  loading="eager" 
                  fetchpriority="high" 
                  decoding="async">
@@ -50,7 +58,7 @@
         border-radius: 16px;
         box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
         overflow: hidden;
-        width: min(500px, 90vw);
+        width: min(480px, 90vw);
         max-width: 90vw;
         max-height: 85vh;
         aspect-ratio: 1 / 1;
@@ -70,7 +78,7 @@
         width: 100%;
         height: 100%;
         aspect-ratio: 1 / 1;
-        max-width: min(500px, 90vw);
+        max-width: min(480px, 90vw);
         max-height: 85vh;
         object-fit: contain;
     }

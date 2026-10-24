@@ -2,13 +2,15 @@
     @php
         $firstProduct = $carouselProducts->first();
         $firstImageUrl = $firstProduct && $firstProduct->foto 
-            ? cloudinary_url($firstProduct->foto, 'f_auto,q_auto,w_1200,h_500,c_fill') 
+            ? cloudinary_url($firstProduct->foto, 'f_webp,q_auto,w_900,h_375,c_fill') 
             : asset('images/default.png');
     @endphp
 
-    @push('preload')
-        <link rel="preload" as="image" href="{{ $firstImageUrl }}" fetchpriority="high">
-    @endpush
+    @if(!isset($activePopup) || !$activePopup)
+        @push('preload')
+            <link rel="preload" as="image" href="{{ $firstImageUrl }}" fetchpriority="high">
+        @endpush
+    @endif
 
 <section id="product-carousel-section">
     <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -30,20 +32,21 @@
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     @php
                         $imageUrl = $product->foto 
-                                    ? cloudinary_url($product->foto, 'f_auto,q_auto,w_1200,h_500,c_fill') 
+                                    ? cloudinary_url($product->foto, 'f_webp,q_auto,w_900,h_375,c_fill') 
                                     : asset('images/default.png');
                         $kategoriNama = $product->kategori->nama_kategori ?? 'Tanpa Kategori';
                     @endphp
 
                     <div class="carousel-image-container position-relative overflow-hidden d-flex align-items-center justify-content-center">
                         <img src="{{ $imageUrl }}" 
-                             srcset="{{ cloudinary_url($product->foto, 'f_auto,q_auto,w_600,h_250,c_fill') }} 600w,
-                                     {{ cloudinary_url($product->foto, 'f_auto,q_auto,w_1200,h_500,c_fill') }} 1200w"
-                             sizes="(max-width: 768px) 600px, 1200px"
+                             srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto,w_500,h_210,c_fill') }} 500w,
+                                     {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_900,h_375,c_fill') }} 900w,
+                                     {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_1200,h_500,c_fill') }} 1200w"
+                             sizes="(max-width: 768px) 100vw, 1200px"
                              alt="{{ $product->nama_produk ?? 'Banner Oscar Multimedia' }}" 
                              class="carousel-img"
-                             width="1200" 
-                             height="450"
+                             width="900" 
+                             height="375"
                              @if($loop->first) fetchpriority="high" @else loading="lazy" decoding="async" @endif>
 
                         <div class="carousel-caption-overlay d-flex align-items-center justify-content-center">
