@@ -33,6 +33,11 @@ class AppServiceProvider extends ServiceProvider
             putenv('CURL_CA_BUNDLE=' . base_path('cacert.pem'));
         }
 
+        // Enforce HTTPS for routes, assets, and URLs when running in production or behind HTTPS proxy
+        if ($this->app->environment('production') || env('APP_ENV') === 'production' || request()->server('HTTP_X_FORWARDED_PROTO') === 'https' || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')) {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
         // Share profileData & kategoris efficiently with file caching
         View::composer(['layouts.guest', 'layouts.app', 'layouts.partials.topbar-lading'], function ($view) {
             $sharedProfile = Cache::remember('site_profile', 3600, function () {
@@ -60,9 +65,29 @@ class AppServiceProvider extends ServiceProvider
 if (!function_exists('cloudinary_url')) {
     function cloudinary_url($path, $transformations = 'f_auto,q_auto') {
         if (!$path) return '';
-        if (str_starts_with($path, 'http')) return $path;
+        $trans = $transformations ? trim($transformations, '/') : 'f_auto,q_auto';
+
+        // Jika path sudah berupa URL Cloudinary lengkap (misal tersimpan di DB)
+        if (str_contains($path, 'res.cloudinary.com')) {
+            if (preg_match('#/image/upload/(?:([a-zA-Z0-9_,]+)/)?(.*)$#', $path, $matches)) {
+                $firstSegment = $matches[1] ?? '';
+                // Jika sudah ada segment transformasi (mengandung _ atau ,)
+                if ($firstSegment && (str_contains($firstSegment, '_') || str_contains($firstSegment, ','))) {
+                    return preg_replace('#/image/upload/[^/]+/#', '/image/upload/' . $trans . '/', $path, 1);
+                } else {
+                    return preg_replace('#/image/upload/#', '/image/upload/' . $trans . '/', $path, 1);
+                }
+            }
+            return $path;
+        }
+
+        // Jika URL eksternal http/https non-Cloudinary
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
         $cloudName = config('services.cloudinary.cloud_name') ?: env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
-        $trans = $transformations ? rtrim($transformations, '/') . '/' : '';
-        return "https://res.cloudinary.com/{$cloudName}/image/upload/{$trans}{$path}";
+        $cleanPath = ltrim($path, '/');
+        return "https://res.cloudinary.com/{$cloudName}/image/upload/{$trans}/{$cleanPath}";
     }
 }

@@ -16,14 +16,15 @@
 
                     {{-- Nama Produk --}}
                     <div class="card-body d-flex flex-column text-center">
-                        <h5 class="card-title">{{ $produk->nama_produk }}</h5>
+                        <h3 class="card-title h5 mb-0">{{ $produk->nama_produk }}</h3>
                     </div>
 
                     {{-- Overlay Hover --}}
                     <div class="hover-overlay d-flex align-items-center justify-content-center">
                         <a href="{{ route('produk', ['kategori' => $desainId]) }}"
                            class="btn rounded-pill px-4" 
-                           style="background-color: #e8b535; color: #fff;">
+                           style="background-color: #e8b535; color: #fff;"
+                           aria-label="Lihat produk desain: {{ $produk->nama_produk }}">
                             Lihat Semua Produk
                         </a>
                     </div>
@@ -41,8 +42,9 @@
     {{-- Tombol toggle jika produk > 4 --}}
     @if(count($desainProducts) > 4)
         <div class="text-center mt-5">
-            <button id="toggle-products-btn" class="btn btn-link text-secondary">
-                <i id="toggle-icon" class="bi bi-arrow-down-circle-fill fs-1"></i>
+            <button id="toggle-products-btn" class="btn btn-link text-secondary" type="button" aria-expanded="false" aria-label="Tampilkan lebih banyak produk desain logo">
+                <i id="toggle-icon" class="bi bi-arrow-down-circle-fill fs-1" aria-hidden="true"></i>
+                <span id="toggle-btn-text" class="visually-hidden">Tampilkan lebih banyak produk desain logo</span>
             </button>
         </div>
     @endif
@@ -104,14 +106,22 @@
     document.addEventListener('DOMContentLoaded', function () {
         const toggleButton = document.getElementById('toggle-products-btn');
         const toggleIcon = document.getElementById('toggle-icon');
+        const toggleText = document.getElementById('toggle-btn-text');
 
-        if (toggleButton) {
+        if (toggleButton && toggleIcon) {
             toggleButton.addEventListener('click', function () {
                 const toggleableProducts = document.querySelectorAll('.product-toggleable');
                 const isExpanded = toggleIcon.classList.contains('bi-arrow-up-circle-fill');
 
                 toggleIcon.classList.toggle('bi-arrow-down-circle-fill', isExpanded);
                 toggleIcon.classList.toggle('bi-arrow-up-circle-fill', !isExpanded);
+
+                const newAriaLabel = isExpanded ? 'Tampilkan lebih banyak produk desain logo' : 'Sembunyikan produk desain logo';
+                toggleButton.setAttribute('aria-expanded', !isExpanded);
+                toggleButton.setAttribute('aria-label', newAriaLabel);
+                if (toggleText) {
+                    toggleText.textContent = newAriaLabel;
+                }
 
                 toggleableProducts.forEach(function (product) {
                     product.classList.toggle('d-none');

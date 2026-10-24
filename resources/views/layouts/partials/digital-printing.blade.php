@@ -22,9 +22,10 @@
                                                  decoding="async">
                                         </div>
                                         <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center p-3">
-                                            <h5 class="product-title text-white fw-bold text-center mb-3">{{ $product->nama_produk }}</h5>
+                                            <h3 class="product-title text-white fw-bold text-center mb-3 h5">{{ $product->nama_produk }}</h3>
                                             <a href="{{ route('produk', ['kategori' => $printingId]) }}" 
-                                               class="btn btn-detail rounded-pill px-4 py-2">
+                                               class="btn btn-detail rounded-pill px-4 py-2"
+                                               aria-label="Lihat produk digital printing: {{ $product->nama_produk }}">
                                                 <i class="fas fa-eye me-2"></i>Lihat Semua Produk
                                             </a>
                                         </div>
@@ -221,25 +222,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.getElementById('digitalPrintingCarousel');
     
     if (carousel) {
-        // Initialize Bootstrap carousel with custom options
-        // const bsCarousel = new bootstrap.Carousel(carousel, {
-        //     interval: 5000,
-        //     ride: 'carousel',
-        //     pause: 'hover',
-        //     wrap: true,
-        //     keyboard: true,
-        //     touch: true
-        // });
+        // Inisialisasi Carousel secara aman
+        function getCarouselInstance() {
+            if (typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
+                return bootstrap.Carousel.getOrCreateInstance(carousel, {
+                    interval: 4000,
+                    ride: 'carousel',
+                    pause: 'hover',
+                    wrap: true,
+                    touch: true
+                });
+            }
+            return null;
+        }
 
-        // Add slide event listeners for better UX
-        carousel.addEventListener('slide.bs.carousel', function (e) {
-            console.log('Sliding to slide:', e.to);
-        });
+        let bsCarousel = getCarouselInstance();
 
+        // Slide event listeners
         carousel.addEventListener('slid.bs.carousel', function (e) {
-            console.log('Slid to slide:', e.to);
-            
-            // Trigger animation for new active slide
             const activeSlide = carousel.querySelector('.carousel-item.active');
             if (activeSlide) {
                 const cards = activeSlide.querySelectorAll('.product-grid-card');
@@ -249,59 +249,65 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Pause carousel when user interacts with products
+        // Pause carousel saat hover kartu produk
         const productCards = carousel.querySelectorAll('.product-grid-card');
         productCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
-                bsCarousel.pause();
+                bsCarousel = bsCarousel || getCarouselInstance();
+                if (bsCarousel) bsCarousel.pause();
             });
             
             card.addEventListener('mouseleave', () => {
-                bsCarousel.cycle();
+                bsCarousel = bsCarousel || getCarouselInstance();
+                if (bsCarousel) bsCarousel.cycle();
             });
         });
 
-        // Touch/Swipe support for mobile
+        // Touch/Swipe support untuk mobile
         let startX = null;
         let currentX = null;
         
         carousel.addEventListener('touchstart', function(e) {
             startX = e.touches[0].clientX;
-        });
+        }, { passive: true });
         
         carousel.addEventListener('touchmove', function(e) {
             if (!startX) return;
             currentX = e.touches[0].clientX;
-        });
+        }, { passive: true });
         
         carousel.addEventListener('touchend', function(e) {
             if (!startX || !currentX) return;
-            
             const diffX = startX - currentX;
             
-            if (Math.abs(diffX) > 50) { // Minimum swipe distance
-                if (diffX > 0) {
-                    bsCarousel.next(); // Swipe left - next slide
-                } else {
-                    bsCarousel.prev(); // Swipe right - previous slide
+            if (Math.abs(diffX) > 50) {
+                bsCarousel = bsCarousel || getCarouselInstance();
+                if (bsCarousel) {
+                    if (diffX > 0) {
+                        bsCarousel.next();
+                    } else {
+                        bsCarousel.prev();
+                    }
                 }
             }
-            
             startX = null;
             currentX = null;
         });
 
-        // Intersection Observer for performance
+        // Intersection Observer untuk pause saat elemen di luar viewport
         if ('IntersectionObserver' in window) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        bsCarousel.cycle(); // Start cycling when visible
-                    } else {
-                        bsCarousel.pause(); // Pause when not visible
+                    bsCarousel = bsCarousel || getCarouselInstance();
+                    if (bsCarousel) {
+                        if (entry.isIntersecting) {
+                            bsCarousel.cycle();
+                        } else {
+                            bsCarousel.pause();
+                        }
                     }
                 });
-            }, { threshold: 0.5 });
+            }, { threshold: 0.2 });
 
             observer.observe(carousel);
         }

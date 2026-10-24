@@ -20,34 +20,36 @@
 
 @endsection
 
+@push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-    const popupOverlay = document.getElementById('infoPopupOverlay');
-    const closePopupBtn = document.getElementById('closePopupBtn');
+        const popupOverlay = document.getElementById('infoPopupOverlay');
+        const closePopupBtn = document.getElementById('closePopupBtn');
 
-    if (popupOverlay) {
-            popupOverlay.style.display = 'flex';
-        }
-
-    // Fungsi untuk menutup pop-up
-    function closePopup() {
         if (popupOverlay) {
-            popupOverlay.style.display = 'none';
+            popupOverlay.classList.add('show');
         }
-    }
 
-    // Tambahkan event listener untuk tombol close
-    if (closePopupBtn) {
-        closePopupBtn.addEventListener('click', closePopup);
-    }
-
-    // (Opsional) Tutup pop-up saat mengklik area overlay
-    if (popupOverlay) {
-        popupOverlay.addEventListener('click', function(event) {
-            if (event.target === popupOverlay) {
-                closePopup();
+        // Fungsi untuk menutup pop-up
+        function closePopup() {
+            if (popupOverlay) {
+                popupOverlay.classList.remove('show');
             }
-        });
-    }
-});
-</script>    
+        }
+
+        // Tambahkan event listener untuk tombol close
+        if (closePopupBtn) {
+            closePopupBtn.addEventListener('click', closePopup);
+        }
+
+        // Tutup pop-up saat mengklik area overlay
+        if (popupOverlay) {
+            popupOverlay.addEventListener('click', function(event) {
+                if (event.target === popupOverlay) {
+                    closePopup();
+                }
+            });
+        }
+    });
+</script>
+@endpush    
