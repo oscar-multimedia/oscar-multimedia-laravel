@@ -2,9 +2,8 @@
     <div class="container-fluid d-flex align-items-center px-3 px-md-4">
         {{-- Logo (Sejajar tengah vertikal) --}}
         <a class="navbar-brand d-flex align-items-center py-0 me-2 me-lg-3 brand-logo-link" href="{{ url('/') }}">
-            @php $profileData = \App\Models\Profile::first(); @endphp
-            @if($profileData && $profileData->logo)
-                <img src="{{ cloudinary_url($profileData->logo) }}" alt="Oscar Multimedia" class="brand-logo img-fluid">
+            @if(!empty($profileData) && !empty($profileData->logo))
+                <img src="{{ cloudinary_url($profileData->logo, 'f_auto,q_auto,h_96,c_limit') }}" alt="Oscar Multimedia" class="brand-logo img-fluid">
             @else
                 <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="brand-logo img-fluid">
             @endif

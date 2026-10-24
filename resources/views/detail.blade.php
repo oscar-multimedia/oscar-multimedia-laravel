@@ -12,9 +12,11 @@
                         <!-- Bagian Gambar -->
                         <div class="col-md-6 text-center">
                             <div class="p-3 bg-light rounded-4 shadow-sm d-flex align-items-center justify-content-center" style="min-height: 260px;">
-                                <img src="{{ $produk->foto ? cloudinary_url($produk->foto) : asset('images/default.png') }}" 
+                                <img src="{{ $produk->foto ? cloudinary_url($produk->foto, 'f_auto,q_auto,w_800,c_limit') : asset('images/default.png') }}" 
                                      class="img-fluid rounded-3" 
                                      alt="{{ $produk->nama_produk }}" 
+                                     loading="lazy"
+                                     decoding="async"
                                      style="max-height: 320px; width: 100%; object-fit: contain;">
                             </div>
                         </div>

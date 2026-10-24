@@ -6,10 +6,11 @@
             <div class="col-md-3 col-6 product-item my-3 @if($index >= 4) d-none product-toggleable @endif">
                 <div class="card h-100 shadow-sm position-relative overflow-hidden hover-card">
 
-                    {{-- Gambar Produk (SUDAH DIPERBAIKI) --}}
-                    <img src="{{ cloudinary_url($produk->foto) }}" 
-                         class="card-img-top product-image"  {{-- Hapus style inline, tambahkan class baru --}}
-                         alt="{{ $produk->nama_produk }}">
+                    <img src="{{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_600,c_limit') }}" 
+                         class="card-img-top product-image"
+                         alt="{{ $produk->nama_produk }}"
+                         loading="lazy"
+                         decoding="async">
 
                     {{-- Nama Produk --}}
                     <div class="card-body d-flex flex-column text-center">

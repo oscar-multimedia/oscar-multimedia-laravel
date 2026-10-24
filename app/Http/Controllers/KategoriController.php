@@ -23,6 +23,8 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
@@ -36,6 +38,8 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil diupdate.');
     }
 
@@ -46,6 +50,9 @@ class KategoriController extends Controller
         }
 
         $kategori->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

@@ -17,7 +17,9 @@ class KontakController extends Controller
     // public view
     public function show()
     {
-        $kontak = Kontak::first(); // ambil 1 record
+        $kontak = \Illuminate\Support\Facades\Cache::remember('site_kontak', 3600, function () {
+            return Kontak::first();
+        });
         return view('kontak', compact('kontak'));
     }
 
@@ -40,6 +42,8 @@ class KontakController extends Controller
                 'whatsapp_link' => $request->whatsapp_link,
             ]
         );
+
+        \Illuminate\Support\Facades\Cache::forget('site_kontak');
 
         return redirect()->route('admin.kontak.index')->with('success', 'Data kontak berhasil disimpan!');
     }

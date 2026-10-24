@@ -8,18 +8,26 @@ use App\Models\Popup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
+use Illuminate\Support\Facades\Cache;
+
 class HomeController extends Controller
 {
     public function index()
     {
-        $activePopup = Popup::where('is_active', true)->first();
+        // 1. Popup Aktif dari Cache
+        $activePopup = Cache::remember('site_active_popup', 3600, function () {
+            return Popup::where('is_active', true)->first();
+        });
         
-        // Cari kategori berdasarkan nama secara fleksibel dengan fallback
-        $kategoriDesain   = Kategori::where('nama_kategori', 'like', '%Desain%')->first() ?? Kategori::find(1);
-        $kategoriPrinting = Kategori::where('nama_kategori', 'like', '%Printing%')->first() ?? Kategori::find(2);
-        $kategoriComputer = Kategori::where('nama_kategori', 'like', '%Computer%')
-                                    ->orWhere('nama_kategori', 'like', '%Komputer%')
-                                    ->first() ?? Kategori::find(3);
+        // 2. Kategori dari Cache (menghindari 4 query database)
+        $categories = Cache::remember('site_kategoris', 3600, function () {
+            return Kategori::all();
+        });
+
+        // Pencarian in-memory tanpa query tambahan ke database
+        $kategoriDesain   = $categories->first(fn($k) => stripos($k->nama_kategori, 'Desain') !== false) ?? $categories->firstWhere('id', 1);
+        $kategoriPrinting = $categories->first(fn($k) => stripos($k->nama_kategori, 'Printing') !== false) ?? $categories->firstWhere('id', 2);
+        $kategoriComputer = $categories->first(fn($k) => stripos($k->nama_kategori, 'Computer') !== false || stripos($k->nama_kategori, 'Komputer') !== false) ?? $categories->firstWhere('id', 3);
 
         $desainId    = $kategoriDesain?->id;
         $printingId  = $kategoriPrinting?->id;
@@ -29,35 +37,31 @@ class HomeController extends Controller
         $printingNama  = $kategoriPrinting?->nama_kategori ?? 'Digital Printing';
         $computerNama  = $kategoriComputer?->nama_kategori ?? 'Computer';
 
-        // Section Digital Printing (eager loading & bounded query)
+        // 3. Section Digital Printing dengan caching
         $digitalPrintingProducts = $printingId 
-            ? Produk::with('kategori')->where('kategori_id', $printingId)->latest()->take(24)->get() 
+            ? Cache::remember('home_printing_' . $printingId, 1800, fn() => 
+                Produk::with('kategori')->where('kategori_id', $printingId)->latest()->take(24)->get()
+              ) 
             : collect();
 
-        // Highlighted Products (1 query, reuse first() for highlightProduct)
-        $highlightedProducts = Produk::with('kategori')->latest()->take(4)->get();
+        // 4. Highlighted Products dengan caching
+        $highlightedProducts = Cache::remember('home_highlighted', 1800, fn() => 
+            Produk::with('kategori')->latest()->take(4)->get()
+        );
         $highlightProduct    = $highlightedProducts->first();
 
-        // Carousel Banner Products (Eager loading to prevent N+1)
-        $categories = Kategori::all();
-        $carouselProducts = new Collection();
+        // 5. Carousel Banner Products dengan caching
+        $recentProducts = Cache::remember('home_recent_photos', 1800, fn() => 
+            Produk::with('kategori')->whereNotNull('foto')->latest()->take(6)->get()
+        );
 
-        // Ambil produk terbaru yang memiliki foto untuk ditampilkan di banner
-        $recentProducts = Produk::with('kategori')
-            ->whereNotNull('foto')
-            ->latest()
-            ->take(6)
-            ->get();
+        $carouselProducts = $recentProducts->isNotEmpty() ? $recentProducts : $highlightedProducts;
 
-        if ($recentProducts->isNotEmpty()) {
-            $carouselProducts = $recentProducts;
-        } else {
-            $carouselProducts = $highlightedProducts;
-        }
-
-        // Section Desain
+        // 6. Section Desain dengan caching
         $desainProducts = $desainId 
-            ? Produk::with('kategori')->where('kategori_id', $desainId)->latest()->take(16)->get() 
+            ? Cache::remember('home_desain_' . $desainId, 1800, fn() => 
+                Produk::with('kategori')->where('kategori_id', $desainId)->latest()->take(16)->get()
+              ) 
             : collect();
 
         return view('home', [

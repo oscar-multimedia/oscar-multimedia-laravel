@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @php $profileData = \App\Models\Profile::first(); @endphp
-    @if($profileData && $profileData->logo)
-        <link rel="icon" href="{{ cloudinary_url($profileData->logo) }}">
+    @if(!empty($profileData) && !empty($profileData->logo))
+        <link rel="icon" href="{{ cloudinary_url($profileData->logo, 'f_auto,q_auto,w_64') }}">
     @else
         <link rel="icon" href="{{ asset('logo_oscar_old.ico') }}">
     @endif

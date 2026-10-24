@@ -36,13 +36,15 @@ class ProdukController extends Controller
             $data['foto'] = $request->file('foto')->store('produk', 'cloudinary');
         }
 
-        Produk::create($data);
+        $produk = Produk::create($data);
+        $this->clearProductCache($produk->kategori_id);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil ditambahkan');
     }
 
     public function update(Request $request, Produk $produk)
     {
+        $oldKategoriId = $produk->kategori_id;
         $data = $request->validate([
             'nama_produk' => 'required|string|max:255',
             'kategori_id' => 'required|integer|exists:kategoris,id',
@@ -64,22 +66,37 @@ class ProdukController extends Controller
         }
 
         $produk->update($data);
+        $this->clearProductCache($oldKategoriId);
+        $this->clearProductCache($produk->kategori_id);
 
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil diperbarui');
     }
 
     public function destroy(Produk $produk)
     {
+        $kategoriId = $produk->kategori_id;
         if ($produk->foto) {
             Storage::disk('cloudinary')->delete($produk->foto);
         }
         $produk->delete();
+        $this->clearProductCache($kategoriId);
+
         return redirect()->route('admin.produk.index')->with('success', 'Produk berhasil dihapus');
+    }
+
+    private function clearProductCache($kategoriId = null)
+    {
+        \Illuminate\Support\Facades\Cache::forget('home_highlighted');
+        \Illuminate\Support\Facades\Cache::forget('home_recent_photos');
+        if ($kategoriId) {
+            \Illuminate\Support\Facades\Cache::forget('home_printing_' . $kategoriId);
+            \Illuminate\Support\Facades\Cache::forget('home_desain_' . $kategoriId);
+        }
     }
 
     public function katalog(Request $request)
     {
-        $kategoris = Kategori::all();
+        $kategoris = \Illuminate\Support\Facades\Cache::remember('site_kategoris', 3600, fn() => Kategori::all());
 
         $query = Produk::with('kategori');
 

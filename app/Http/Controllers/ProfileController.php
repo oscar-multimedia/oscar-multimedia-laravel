@@ -16,7 +16,9 @@ class ProfileController extends Controller
     
     public function show()
     {
-        $profile = Profile::first(); // ambil 1 record
+        $profile = \Illuminate\Support\Facades\Cache::remember('site_profile', 3600, function () {
+            return Profile::first();
+        });
         return view('profile', compact('profile'));
     }
 
@@ -47,6 +49,8 @@ class ProfileController extends Controller
         }
 
         Profile::updateOrCreate(['id' => 1], $data);
+
+        \Illuminate\Support\Facades\Cache::forget('site_profile');
 
         return redirect()->route('admin.profile.index')->with('success', 'Profil berhasil diperbarui!');
     }
