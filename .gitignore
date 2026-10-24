@@ -26,3 +26,5 @@ Homestead.yaml
 Thumbs.db
 /penting/
 oscarmul_oscar_multimedia_laravel.sql
+test_db.php
+test_*.php
