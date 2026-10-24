@@ -32,9 +32,16 @@
     <h2 class="text-center section-title mb-4">SERVICE & ACCESSORIS COMPUTER</h2>
 
     <div class="jasa-komputer-wrapper">
+        <picture>
+            <source srcset="{{ asset('jasa-komputer.webp') }}" type="image/webp">
             <img src="{{ asset('jasa-komputer.png') }}"
-                 alt="Jasa Komputer"
-                 class="jasa-komputer-image img-fluid">
+                 alt="Service & Accessoris Komputer - Oscar Multimedia"
+                 class="jasa-komputer-image img-fluid"
+                 width="1050"
+                 height="350"
+                 loading="lazy"
+                 decoding="async">
+        </picture>
 
             <div class="jasa-komputer-overlay">
                 <a href="{{ route('produk', ['kategori' => $computerId]) }}"

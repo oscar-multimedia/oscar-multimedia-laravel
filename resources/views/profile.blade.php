@@ -32,9 +32,9 @@
 <div class="container text-center px-3 px-md-4 py-3 py-md-4 profile-container">
     {{-- Logo --}}
     @if ($profile && $profile->logo)
-        <img src="{{ cloudinary_url($profile->logo) }}" alt="Oscar Multimedia" class="profile-logo">
+        <img src="{{ cloudinary_url($profile->logo, 'f_auto,q_auto,w_250') }}" alt="Oscar Multimedia" class="profile-logo" width="180" height="60" loading="lazy" decoding="async">
     @else
-        <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="profile-logo">
+        <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="profile-logo" width="180" height="60" loading="lazy" decoding="async">
     @endif
 
     {{-- Judul Profil --}}

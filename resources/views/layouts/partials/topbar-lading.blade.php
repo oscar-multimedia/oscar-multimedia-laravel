@@ -3,9 +3,9 @@
         {{-- Logo (Sejajar tengah vertikal) --}}
         <a class="navbar-brand d-flex align-items-center py-0 me-2 me-lg-3 brand-logo-link" href="{{ url('/') }}">
             @if(!empty($profileData) && !empty($profileData->logo))
-                <img src="{{ cloudinary_url($profileData->logo, 'f_auto,q_auto,h_96,c_limit') }}" alt="Oscar Multimedia" class="brand-logo img-fluid">
+                <img src="{{ cloudinary_url($profileData->logo, 'f_auto,q_auto,h_96,c_limit') }}" alt="Oscar Multimedia" class="brand-logo img-fluid" width="180" height="48">
             @else
-                <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="brand-logo img-fluid">
+                <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="brand-logo img-fluid" width="180" height="48">
             @endif
         </a>
 

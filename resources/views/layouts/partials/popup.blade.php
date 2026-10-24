@@ -3,7 +3,7 @@
         <div class="popup-content-image">
             <button id="closePopupBtn" class="popup-close-btn">&times;</button>
 
-            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_800,c_limit') }}" alt="Informasi Penting" class="popup-image">
+            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_800,c_limit') }}" alt="Informasi Penting" class="popup-image" width="600" height="400" loading="lazy" decoding="async">
         </div>
     </div>
 @endif

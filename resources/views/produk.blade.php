@@ -233,9 +233,11 @@
                         <div class="card product-card h-100 border-0 shadow-sm overflow-hidden">
                             {{-- Gambar dengan overlay hover --}}
                             <div class="product-img-wrapper position-relative">
-                                <img src="{{ $produk->foto ? cloudinary_url($produk->foto, 'f_auto,q_auto,w_600,c_limit') : asset('images/default.png') }}" 
+                                <img src="{{ $produk->foto ? cloudinary_url($produk->foto, 'f_auto,q_auto,w_400,h_260,c_fill') : asset('images/default.png') }}" 
                                      class="card-img-top product-card-img" 
                                      alt="{{ $produk->nama_produk }}"
+                                     width="400"
+                                     height="260"
                                      loading="lazy"
                                      decoding="async">
                                 
