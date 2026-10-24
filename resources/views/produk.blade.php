@@ -7,23 +7,8 @@
 {{-- Mengisi bagian 'content' --}}
 @section('content')
 <style>
-    /* Atur jarak atas untuk konten yang berada di bawah topbar fixed */
     .content-top-padding {
-        margin-top: 90px;
-    }
-    @media (min-width: 768px) {
-        .content-top-padding {
-            margin-top: 50px;
-        }
-    }
-
-    @media (min-width: 768px) and (max-width: 991.98px) {
-        .navbar-custom > .container-fluid {
-            justify-content: center !important;
-        }
-        .navbar-custom .d-flex.align-items-center.gap-4 {
-            margin-top: 0 !important;
-        }
+        margin-top: 1rem;
     }
 
     .card .overlay {
@@ -39,8 +24,8 @@
 </style>
 
 <div class="container content-top-padding">
-    <div class="text-center mb-5">
-        <h1>Katalog Produk Kami</h1>
+    <div class="text-center mb-4 mb-md-5">
+        <h1 class="fw-bold">Katalog Produk Kami</h1>
         <p class="lead text-muted">Temukan produk terbaik yang sesuai dengan kebutuhan Anda.</p>
     </div>
     <div class="row">
@@ -126,6 +111,13 @@
                     </div>
                 @endforelse
             </div>
+
+            {{-- Pagination Links --}}
+            @if(method_exists($produks, 'hasPages') && $produks->hasPages())
+                <div class="d-flex justify-content-center mt-5">
+                    {{ $produks->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </div>
