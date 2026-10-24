@@ -10,6 +10,7 @@
     .jasa-komputer-image {
         width: 100%;
         height: auto;
+        aspect-ratio: 1050 / 350;
         display: block;
         object-fit: cover;
         transition: transform 0.4s ease;
@@ -41,7 +42,7 @@
     <h2 class="text-center section-title mb-4">SERVICE & ACCESSORIS COMPUTER</h2>
 
     <div class="jasa-komputer-wrapper">
-        <img src="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_auto,q_auto') }}"
+        <img src="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_auto,q_auto,w_1050') }}"
              alt="Service & Accessoris Komputer - Oscar Multimedia"
              class="jasa-komputer-image w-100 img-fluid"
              width="1050"
@@ -52,7 +53,8 @@
             <div class="jasa-komputer-overlay">
                 <a href="{{ route('produk', ['kategori' => $computerId]) }}"
                    class="btn px-4 py-2 rounded-pill fw-semibold"
-                   style= "background-color: #e8b535; color: #fff;">
+                   style= "background-color: #e8b535; color: #fff;"
+                   aria-label="Lihat semua produk Service & Accessoris Komputer">
                     Lihat Semua Produk
                 </a>
             </div>

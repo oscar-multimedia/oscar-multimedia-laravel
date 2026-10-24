@@ -5,11 +5,32 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 if (!function_exists('cloudinary_url')) {
-    function cloudinary_url($path) {
+    function cloudinary_url($path, $transformations = 'f_auto,q_auto') {
         if (!$path) return '';
-        if (str_starts_with($path, 'http')) return $path;
+        $trans = $transformations ? trim($transformations, '/') : 'f_auto,q_auto';
+
+        // Jika path sudah berupa URL Cloudinary lengkap (misal tersimpan di DB)
+        if (str_contains($path, 'res.cloudinary.com')) {
+            if (preg_match('#/image/upload/(?:([a-zA-Z0-9_,]+)/)?(.*)$#', $path, $matches)) {
+                $firstSegment = $matches[1] ?? '';
+                // Jika sudah ada segment transformasi (mengandung _ atau ,)
+                if ($firstSegment && (str_contains($firstSegment, '_') || str_contains($firstSegment, ','))) {
+                    return preg_replace('#/image/upload/[^/]+/#', '/image/upload/' . $trans . '/', $path, 1);
+                } else {
+                    return preg_replace('#/image/upload/#', '/image/upload/' . $trans . '/', $path, 1);
+                }
+            }
+            return $path;
+        }
+
+        // Jika URL eksternal http/https non-Cloudinary
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
         $cloudName = function_exists('config') ? (config('services.cloudinary.cloud_name') ?: env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj')) : env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
-        return "https://res.cloudinary.com/{$cloudName}/image/upload/{$path}";
+        $cleanPath = ltrim($path, '/');
+        return "https://res.cloudinary.com/{$cloudName}/image/upload/{$trans}/{$cleanPath}";
     }
 }
 

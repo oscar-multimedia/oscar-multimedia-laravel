@@ -29,14 +29,12 @@
         z-index: 9999;
         padding: 20px;
         opacity: 0;
-        visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.25s ease, visibility 0.25s ease;
+        transition: opacity 0.25s ease;
     }
 
     .popup-overlay.show {
         opacity: 1;
-        visibility: visible;
         pointer-events: auto;
     }
 
@@ -48,14 +46,18 @@
         max-width: 90vw;
         max-height: 85vh;
         width: min(600px, 90vw);
+        aspect-ratio: 600 / 400;
+        contain: layout paint;
     }
 
     .popup-image {
         display: block;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 600 / 400;
         max-width: 100%;
         max-height: 85vh;
-        width: auto;
-        height: auto;
+        object-fit: contain;
         margin: 0 auto;
         border-radius: 10px;
         box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
