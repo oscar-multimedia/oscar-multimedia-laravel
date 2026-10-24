@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'cloudinary' => [
+        'cloud_name' => env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj'),
+    ],
+
 ];

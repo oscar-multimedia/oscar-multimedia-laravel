@@ -23,6 +23,8 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
@@ -36,12 +38,21 @@ class KategoriController extends Controller
             'nama_kategori' => $request->nama_kategori
         ]);
 
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil diupdate.');
     }
 
     public function destroy(Kategori $kategori)
     {
+        if ($kategori->produks()->exists()) {
+            return redirect()->route('admin.kategori.index')->with('error', 'Kategori "' . e($kategori->nama_kategori) . '" tidak dapat dihapus karena masih digunakan oleh produk.');
+        }
+
         $kategori->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('site_kategoris');
+
         return redirect()->route('admin.kategori.index')->with('success', 'Kategori berhasil dihapus.');
     }
 }

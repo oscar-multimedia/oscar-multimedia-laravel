@@ -8,7 +8,7 @@ if (!function_exists('cloudinary_url')) {
     function cloudinary_url($path) {
         if (!$path) return '';
         if (str_starts_with($path, 'http')) return $path;
-        $cloudName = env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
+        $cloudName = function_exists('config') ? (config('services.cloudinary.cloud_name') ?: env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj')) : env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
         return "https://res.cloudinary.com/{$cloudName}/image/upload/{$path}";
     }
 }

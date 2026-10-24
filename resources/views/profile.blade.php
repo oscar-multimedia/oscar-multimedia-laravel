@@ -10,38 +10,40 @@
 {{-- CSS yang spesifik untuk halaman profil ini --}}
 <style>
     .profile-container {
-        min-height: calc(100vh - 250px); /* Menjaga agar footer tetap di bawah */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        max-width: 800px;
+        margin: 0 auto;
     }
     .profile-logo {
-        max-width: 200px;
-        margin-bottom: 1rem;
+        max-width: 180px;
+        height: auto;
+        margin-bottom: 1.25rem;
     }
     .profile-content p {
-        max-width: 700px;
+        max-width: 720px;
         margin-left: auto;
         margin-right: auto;
         text-align: justify;
+        line-height: 1.8;
+        color: #495057;
+        font-size: 1.05rem;
     }
 </style>
 
-<div class="container text-center px-4 my-5 profile-container">
+<div class="container text-center px-3 px-md-4 py-3 py-md-4 profile-container">
     {{-- Logo --}}
-    @if ($profile->logo)
-        <img src="{{ cloudinary_url($profile->logo) }}" alt="Oscar Multimedia" class="profile-logo">
+    @if ($profile && $profile->logo)
+        <img src="{{ cloudinary_url($profile->logo, 'f_auto,q_auto,w_250') }}" alt="Oscar Multimedia" class="profile-logo" width="180" height="60" loading="lazy" decoding="async">
+    @else
+        <img src="{{ asset('logo_oscar_old.png') }}" alt="Oscar Multimedia" class="profile-logo" width="180" height="60" loading="lazy" decoding="async">
     @endif
 
     {{-- Judul Profil --}}
-    <h2 class="fw-bold" style="color: #e8b535;">{!! $profile->judul !!}</h2>
+    <h2 class="fw-bold mb-3" style="color: #e8b535;">{{ $profile->judul ?? 'Oscar Multimedia' }}</h2>
 
     {{-- Konten Profil --}}
-    <div class="profile-content mt-4">
-        <p>{!! $profile->konten !!}</p>
+    <div class="profile-content mt-3">
+        <p>{!! nl2br(e($profile->konten ?? 'Profil perusahaan belum diatur.')) !!}</p>
     </div>
 </div>
 
 @endsection
-{{-- Akhir dari bagian konten --}}

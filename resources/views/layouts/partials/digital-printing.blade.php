@@ -13,9 +13,13 @@
                                 <div class="col">
                                     <div class="product-grid-card position-relative overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                                         <div class="image-wrapper">
-                                            <img src="{{ cloudinary_url($product->foto) }}" 
+                                            <img src="{{ cloudinary_url($product->foto, 'f_auto,q_auto,w_400,h_280,c_fill') }}" 
                                                  alt="{{ $product->nama_produk }}" 
-                                                 class="product-image">
+                                                 class="product-image"
+                                                 width="400"
+                                                 height="280"
+                                                 loading="lazy"
+                                                 decoding="async">
                                         </div>
                                         <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center p-3">
                                             <h5 class="product-title text-white fw-bold text-center mb-3">{{ $product->nama_produk }}</h5>
@@ -35,27 +39,15 @@
 
         <!-- Custom Navigation Controls -->
         @if($digitalPrintingProducts->chunk(8)->count() > 1)
-            <button id="tombolprev" class="carousel-control-prev custom-carousel-control" style= "color: #0000" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="prev">
+            <button id="tombolprev" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button id="tombolnext" class="carousel-control-next custom-carousel-control" style= "color: #0000" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="next">
+            <button id="tombolnext" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-
-            <!-- Custom Indicators -->
-            <!-- <div id="tombolgeser" class="carousel-indicators custom-indicators" style="color: #0000;">
-                @foreach($digitalPrintingProducts->chunk(8) as $chunkIndex => $chunk)
-                    <button type="button" 
-                            data-bs-target="#digitalPrintingCarousel" 
-                            data-bs-slide-to="{{ $chunkIndex }}" 
-                            class="{{ $chunkIndex == 0 ? 'active' : '' }}"
-                            aria-label="Slide {{ $chunkIndex + 1 }}">
-                    </button>
-                @endforeach
-            </div>
-        @endif -->
+        @endif
     </div>
 </section>
 

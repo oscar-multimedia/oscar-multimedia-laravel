@@ -62,6 +62,8 @@ class PopupController extends Controller
             $popup->update(['is_active' => true]);
         });
 
+        \Illuminate\Support\Facades\Cache::forget('site_active_popup');
+
         return redirect()->route('admin.popup.index')->with('success', 'Pop-up berhasil diaktifkan.');
     }
 
@@ -75,6 +77,8 @@ class PopupController extends Controller
 
         // Hapus record dari database
         $popup->delete();
+
+        \Illuminate\Support\Facades\Cache::forget('site_active_popup');
 
         return redirect()->route('admin.popup.index')->with('success', 'Gambar pop-up berhasil dihapus.');
     }

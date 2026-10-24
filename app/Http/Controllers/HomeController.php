@@ -8,58 +8,62 @@ use App\Models\Popup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
+use Illuminate\Support\Facades\Cache;
+
 class HomeController extends Controller
 {
     public function index()
     {
-        $activePopup = Popup::where('is_active', true)->first();
+        // 1. Popup Aktif dari Cache
+        $activePopup = Cache::remember('site_active_popup', 3600, function () {
+            return Popup::where('is_active', true)->first();
+        });
         
-        // === LANGKAH 1: Ambil ID Kategori yang dibutuhkan ===
-        $kategoriDesain    = Kategori::where('id', '1')->first();
-        $kategoriPrinting  = Kategori::where('id', '2')->first();
-        // Anda bisa menambahkan kategori lain jika perlu, misal:
-        $kategoriComputer  = Kategori::where('id', '3')->first();
+        // 2. Kategori dari Cache (menghindari 4 query database)
+        $categories = Cache::remember('site_kategoris', 3600, function () {
+            return Kategori::all();
+        });
 
-        // Ambil ID-nya dengan aman (jika kategori tidak ditemukan, hasilnya akan null)
+        // Pencarian in-memory tanpa query tambahan ke database
+        $kategoriDesain   = $categories->first(fn($k) => stripos($k->nama_kategori, 'Desain') !== false) ?? $categories->firstWhere('id', 1);
+        $kategoriPrinting = $categories->first(fn($k) => stripos($k->nama_kategori, 'Printing') !== false) ?? $categories->firstWhere('id', 2);
+        $kategoriComputer = $categories->first(fn($k) => stripos($k->nama_kategori, 'Computer') !== false || stripos($k->nama_kategori, 'Komputer') !== false) ?? $categories->firstWhere('id', 3);
+
         $desainId    = $kategoriDesain?->id;
         $printingId  = $kategoriPrinting?->id;
         $computerId  = $kategoriComputer?->id;
         
-        $desainNama    = $kategoriDesain?->nama_kategori;
-        $printingNama  = $kategoriPrinting?->nama_kategori;
-        $computerNama  = $kategoriComputer?->nama_kategori;
-        // === PERBAIKAN LOGIKA LAMA ANDA ===
+        $desainNama    = $kategoriDesain?->nama_kategori ?? 'Desain';
+        $printingNama  = $kategoriPrinting?->nama_kategori ?? 'Digital Printing';
+        $computerNama  = $kategoriComputer?->nama_kategori ?? 'Computer';
 
-        // --- Logika untuk Section "Digital Printing" ---
-        // DIUBAH: Mengambil produk berdasarkan ID kategori, bukan ID produk statis.
-        $digitalPrintingProducts = Produk::where('kategori_id', $printingId)
-                                         ->latest()
-                                         ->get();
+        // 3. Section Digital Printing dengan caching
+        $digitalPrintingProducts = $printingId 
+            ? Cache::remember('home_printing_' . $printingId, 1800, fn() => 
+                Produk::with('kategori')->where('kategori_id', $printingId)->latest()->take(24)->get()
+              ) 
+            : collect();
 
-        // --- Logika untuk Produk Sorotan (Highlighted) ---
-        $highlightedProducts = Produk::latest()->take(4)->get();
-        $highlightProduct = Produk::latest()->first();
+        // 4. Highlighted Products dengan caching
+        $highlightedProducts = Cache::remember('home_highlighted', 1800, fn() => 
+            Produk::with('kategori')->latest()->take(4)->get()
+        );
+        $highlightProduct    = $highlightedProducts->first();
 
-        // --- Logika untuk Carousel ---
-        // DIUBAH: Mengambil data dari tabel Kategori langsung.
-        $categories = Kategori::all();
-        $carouselProducts = new Collection();
+        // 5. Carousel Banner Products dengan caching
+        $recentProducts = Cache::remember('home_recent_photos', 1800, fn() => 
+            Produk::with('kategori')->whereNotNull('foto')->latest()->take(6)->get()
+        );
 
-        foreach ($categories as $category) {
-            // Ambil 1 produk terbaru dari setiap kategori menggunakan ID-nya.
-            $product = Produk::where('kategori_id', $category->id)->latest()->first();
-            if ($product) {
-                $carouselProducts->push($product);
-            }
-        }
+        $carouselProducts = $recentProducts->isNotEmpty() ? $recentProducts : $highlightedProducts;
 
-        // --- Logika untuk Section "Desain" ---
-        // DIUBAH: Mengambil produk berdasarkan ID kategori 'Desain'.
-        $desainProducts = Produk::where('kategori_id', $desainId)
-                                ->latest()
-                                ->get();
+        // 6. Section Desain dengan caching
+        $desainProducts = $desainId 
+            ? Cache::remember('home_desain_' . $desainId, 1800, fn() => 
+                Produk::with('kategori')->where('kategori_id', $desainId)->latest()->take(16)->get()
+              ) 
+            : collect();
 
-        // --- Kirim semua data yang dibutuhkan ke view ---
         return view('home', [
             'activePopup'             => $activePopup,
             'carouselProducts'        => $carouselProducts,
@@ -67,15 +71,13 @@ class HomeController extends Controller
             'digitalPrintingProducts' => $digitalPrintingProducts,
             'highlightedProducts'     => $highlightedProducts,
             'highlightProduct'        => $highlightProduct,
-            
-            // DITAMBAHKAN: Kirim ID ke view agar bisa dipakai di link
             'desainId'                => $desainId,
             'printingId'              => $printingId,
             'computerId'              => $computerId,
-            'desainNama'                => $desainNama,
-            'printingNama'              => $printingNama,
-            'computerNama'              => $computerNama,
-            'kategoris'                => $categories
+            'desainNama'              => $desainNama,
+            'printingNama'            => $printingNama,
+            'computerNama'            => $computerNama,
+            'kategoris'               => $categories
         ]);
     }
 }
