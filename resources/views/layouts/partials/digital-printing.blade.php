@@ -17,7 +17,7 @@
                                                  srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_180,h_126,c_fill') }} 180w,
                                                          {{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_240,h_168,c_fill') }} 240w,
                                                          {{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_300,h_210,c_fill') }} 300w"
-                                                 sizes="(max-width: 576px) 110px, 240px"
+                                                 sizes="(max-width: 576px) 68px, 240px"
                                                  alt="{{ $product->nama_produk }}" 
                                                  class="product-image"
                                                  width="240"
