@@ -5,9 +5,14 @@
                 <i class="bi bi-x-lg" aria-hidden="true"></i>
             </button>
 
-            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_800,c_limit') }}" 
+            <img src="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_500,c_limit') }}" 
+                 srcset="{{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_380,c_limit') }} 380w,
+                         {{ cloudinary_url($activePopup->image_path, 'f_auto,q_auto,w_500,c_limit') }} 500w"
+                 sizes="(max-width: 576px) 380px, 500px"
                  alt="Informasi Penting" 
                  class="popup-image" 
+                 width="500" 
+                 height="500" 
                  loading="eager" 
                  fetchpriority="high" 
                  decoding="async">
@@ -45,8 +50,10 @@
         border-radius: 16px;
         box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15);
         overflow: hidden;
-        max-width: min(580px, 92vw);
+        width: min(500px, 90vw);
+        max-width: 90vw;
         max-height: 85vh;
+        aspect-ratio: 1 / 1;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -61,8 +68,9 @@
     .popup-image {
         display: block;
         width: 100%;
-        height: auto;
-        max-width: min(580px, 92vw);
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: min(500px, 90vw);
         max-height: 85vh;
         object-fit: contain;
     }
