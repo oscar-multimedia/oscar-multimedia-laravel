@@ -35,27 +35,15 @@
 
         <!-- Custom Navigation Controls -->
         @if($digitalPrintingProducts->chunk(8)->count() > 1)
-            <button id="tombolprev" class="carousel-control-prev custom-carousel-control" style= "color: #0000" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="prev">
+            <button id="tombolprev" class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button id="tombolnext" class="carousel-control-next custom-carousel-control" style= "color: #0000" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="next">
+            <button id="tombolnext" class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#digitalPrintingCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
-
-            <!-- Custom Indicators -->
-            <!-- <div id="tombolgeser" class="carousel-indicators custom-indicators" style="color: #0000;">
-                @foreach($digitalPrintingProducts->chunk(8) as $chunkIndex => $chunk)
-                    <button type="button" 
-                            data-bs-target="#digitalPrintingCarousel" 
-                            data-bs-slide-to="{{ $chunkIndex }}" 
-                            class="{{ $chunkIndex == 0 ? 'active' : '' }}"
-                            aria-label="Slide {{ $chunkIndex + 1 }}">
-                    </button>
-                @endforeach
-            </div>
-        @endif -->
+        @endif
     </div>
 </section>
 

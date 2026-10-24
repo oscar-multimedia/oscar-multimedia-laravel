@@ -14,52 +14,52 @@ class HomeController extends Controller
     {
         $activePopup = Popup::where('is_active', true)->first();
         
-        // === LANGKAH 1: Ambil ID Kategori yang dibutuhkan ===
-        $kategoriDesain    = Kategori::where('id', '1')->first();
-        $kategoriPrinting  = Kategori::where('id', '2')->first();
-        // Anda bisa menambahkan kategori lain jika perlu, misal:
-        $kategoriComputer  = Kategori::where('id', '3')->first();
+        // Cari kategori berdasarkan nama secara fleksibel dengan fallback
+        $kategoriDesain   = Kategori::where('nama_kategori', 'like', '%Desain%')->first() ?? Kategori::find(1);
+        $kategoriPrinting = Kategori::where('nama_kategori', 'like', '%Printing%')->first() ?? Kategori::find(2);
+        $kategoriComputer = Kategori::where('nama_kategori', 'like', '%Computer%')
+                                    ->orWhere('nama_kategori', 'like', '%Komputer%')
+                                    ->first() ?? Kategori::find(3);
 
-        // Ambil ID-nya dengan aman (jika kategori tidak ditemukan, hasilnya akan null)
         $desainId    = $kategoriDesain?->id;
         $printingId  = $kategoriPrinting?->id;
         $computerId  = $kategoriComputer?->id;
         
-        $desainNama    = $kategoriDesain?->nama_kategori;
-        $printingNama  = $kategoriPrinting?->nama_kategori;
-        $computerNama  = $kategoriComputer?->nama_kategori;
-        // === PERBAIKAN LOGIKA LAMA ANDA ===
+        $desainNama    = $kategoriDesain?->nama_kategori ?? 'Desain';
+        $printingNama  = $kategoriPrinting?->nama_kategori ?? 'Digital Printing';
+        $computerNama  = $kategoriComputer?->nama_kategori ?? 'Computer';
 
-        // --- Logika untuk Section "Digital Printing" ---
-        // DIUBAH: Mengambil produk berdasarkan ID kategori, bukan ID produk statis.
-        $digitalPrintingProducts = Produk::where('kategori_id', $printingId)
-                                         ->latest()
-                                         ->get();
+        // Section Digital Printing (eager loading & bounded query)
+        $digitalPrintingProducts = $printingId 
+            ? Produk::with('kategori')->where('kategori_id', $printingId)->latest()->take(24)->get() 
+            : collect();
 
-        // --- Logika untuk Produk Sorotan (Highlighted) ---
-        $highlightedProducts = Produk::latest()->take(4)->get();
-        $highlightProduct = Produk::latest()->first();
+        // Highlighted Products (1 query, reuse first() for highlightProduct)
+        $highlightedProducts = Produk::with('kategori')->latest()->take(4)->get();
+        $highlightProduct    = $highlightedProducts->first();
 
-        // --- Logika untuk Carousel ---
-        // DIUBAH: Mengambil data dari tabel Kategori langsung.
+        // Carousel Banner Products (Eager loading to prevent N+1)
         $categories = Kategori::all();
         $carouselProducts = new Collection();
 
-        foreach ($categories as $category) {
-            // Ambil 1 produk terbaru dari setiap kategori menggunakan ID-nya.
-            $product = Produk::where('kategori_id', $category->id)->latest()->first();
-            if ($product) {
-                $carouselProducts->push($product);
-            }
+        // Ambil produk terbaru yang memiliki foto untuk ditampilkan di banner
+        $recentProducts = Produk::with('kategori')
+            ->whereNotNull('foto')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        if ($recentProducts->isNotEmpty()) {
+            $carouselProducts = $recentProducts;
+        } else {
+            $carouselProducts = $highlightedProducts;
         }
 
-        // --- Logika untuk Section "Desain" ---
-        // DIUBAH: Mengambil produk berdasarkan ID kategori 'Desain'.
-        $desainProducts = Produk::where('kategori_id', $desainId)
-                                ->latest()
-                                ->get();
+        // Section Desain
+        $desainProducts = $desainId 
+            ? Produk::with('kategori')->where('kategori_id', $desainId)->latest()->take(16)->get() 
+            : collect();
 
-        // --- Kirim semua data yang dibutuhkan ke view ---
         return view('home', [
             'activePopup'             => $activePopup,
             'carouselProducts'        => $carouselProducts,
@@ -67,15 +67,13 @@ class HomeController extends Controller
             'digitalPrintingProducts' => $digitalPrintingProducts,
             'highlightedProducts'     => $highlightedProducts,
             'highlightProduct'        => $highlightProduct,
-            
-            // DITAMBAHKAN: Kirim ID ke view agar bisa dipakai di link
             'desainId'                => $desainId,
             'printingId'              => $printingId,
             'computerId'              => $computerId,
-            'desainNama'                => $desainNama,
-            'printingNama'              => $printingNama,
-            'computerNama'              => $computerNama,
-            'kategoris'                => $categories
+            'desainNama'              => $desainNama,
+            'printingNama'            => $printingNama,
+            'computerNama'            => $computerNama,
+            'kategoris'               => $categories
         ]);
     }
 }
