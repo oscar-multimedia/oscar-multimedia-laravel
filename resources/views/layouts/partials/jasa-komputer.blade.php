@@ -42,10 +42,11 @@
     <h2 class="text-center section-title mb-4">SERVICE & ACCESSORIS COMPUTER</h2>
 
     <div class="jasa-komputer-wrapper">
-        <img src="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_auto,q_auto,w_1050') }}"
-             srcset="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_auto,q_auto,w_480') }} 480w,
-                     {{ cloudinary_url('banner/jasa-komputer.webp', 'f_auto,q_auto,w_1050') }} 1050w"
-             sizes="(max-width: 576px) 480px, 1050px"
+        <img src="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_webp,q_auto,w_760') }}"
+             srcset="{{ cloudinary_url('banner/jasa-komputer.webp', 'f_webp,q_auto,w_400') }} 400w,
+                     {{ cloudinary_url('banner/jasa-komputer.webp', 'f_webp,q_auto,w_760') }} 760w,
+                     {{ cloudinary_url('banner/jasa-komputer.webp', 'f_webp,q_auto,w_1050') }} 1050w"
+             sizes="(max-width: 576px) 100vw, (max-width: 992px) 100vw, 1050px"
              alt="Service & Accessoris Komputer - Oscar Multimedia"
              class="jasa-komputer-image w-100 img-fluid"
              width="1050"
