@@ -9,64 +9,70 @@
     @else
         <link rel="icon" href="{{ asset('logo_oscar_old.ico') }}">
     @endif
-    {{-- Judul halaman bisa dibuat dinamis juga --}}
+    {{-- Judul halaman bisa dibuat dinamis --}}
     <title>@yield('title', 'Oscar Multimedia')</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <style>
-        /* Kustomisasi Warna dan Style */
+        /* CSS Root & Responsive Layout Spacing */
+        :root {
+            --navbar-offset: 65px;
+        }
+
+        @media (max-width: 767.98px) {
+            :root {
+                --navbar-offset: 95px;
+            }
+        }
+
         html, body {
             height: 100%;
             margin: 0;
         }
         
         body {
-            background-color: #ffffff; /* Warna latar belakang utama */
+            background-color: #ffffff;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
-        main {
-            flex: 1;
-        }
-        .bg-custom-header-footer {
-            background-color: #e6b34b; /* Warna kuning/emas untuk header dan footer */
-            color: #212529; /* Warna teks gelap agar kontras */
-        }
-        .placeholder-box {
-            background-color: #d9d9d9; /* Warna abu-abu untuk placeholder */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #555;
-            min-height: 150px; /* Tinggi minimum untuk semua box */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding-top: var(--navbar-offset);
             width: 100%;
-            border-radius: 0.25rem; /* Sedikit lengkungan di sudut */
         }
+
+        .bg-custom-header-footer {
+            background-color: #e6b34b;
+            color: #212529;
+        }
+
         .section-title {
             font-weight: bold;
             color: #333;
-            margin-top: 4rem;
+            margin-top: 3rem;
             margin-bottom: 2rem;
         }
-        /* Menyesuaikan tinggi placeholder sesuai desain */
-        .tall-placeholder { height: 420px; }
-        .small-placeholder { height: 200px; }
-        .large-placeholder { height: 350px; }
+
+        @media (max-width: 767.98px) {
+            .section-title {
+                margin-top: 2rem;
+                margin-bottom: 1.5rem;
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
     {{-- Bagian Header yang akan selalu tampil --}}
     @include('layouts.header')
 
-    <main class="container-fluid px-4 my-5">
-
-        {{-- INI ADALAH BAGIAN KONTEN YANG AKAN DIISI OLEH HALAMAN LAIN --}}
+    <main class="main-content-wrapper container-fluid px-3 px-md-4 mb-4">
+        {{-- BAGIAN KONTEN HALAMAN --}}
         @yield('content')
-
     </main>
 
     {{-- Bagian Footer yang akan selalu tampil --}}
