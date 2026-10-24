@@ -24,6 +24,10 @@
     }
 
     .navbar-custom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         z-index: 1040;

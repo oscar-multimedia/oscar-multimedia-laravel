@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Oscar Multimedia - Solusi percetakan digital printing, sablon, merchandise, desain grafis, dan servis komputer terpercaya.">
 
-    {{-- Preconnect & DNS-Prefetch untuk CDN eksternal --}}
+    {{-- Preconnect & DNS-Prefetch untuk CDN eksternal (Cloudinary) --}}
     <link rel="preconnect" href="https://res.cloudinary.com">
     <link rel="dns-prefetch" href="https://res.cloudinary.com">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 
     {{-- Stack untuk Preload Gambar LCP dari Halaman Spesifik --}}
     @stack('preload')
@@ -22,21 +20,22 @@
     {{-- Judul halaman bisa dibuat dinamis --}}
     <title>@yield('title', 'Oscar Multimedia')</title>
 
-    {{-- CSS Framework: Preload + Non-blocking with print media switch --}}
-    <link rel="preload" href="{{ asset('css/bootstrap.min.css') }}" as="style">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"></noscript>
+    {{-- CSS Framework: Bootstrap 5 (Lokal / Self-hosted, Synchronous to eliminate CLS) --}}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
 
-    {{-- Bootstrap Icons --}}
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"></noscript>
+    {{-- Bootstrap Icons (Lokal / Self-hosted w/ font-display: swap) --}}
+    <link rel="preload" href="{{ asset('fonts/bootstrap-icons.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-icons.min.css') }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ asset('css/bootstrap-icons.min.css') }}"></noscript>
 
     <style>
-        @font-face {
-            font-family: "bootstrap-icons";
-            font-display: swap;
-            src: url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff2") format("woff2"),
-                 url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/fonts/bootstrap-icons.woff") format("woff");
+        /* Header navigation fixed position guarantee to eliminate CLS */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1040;
         }
 
         /* CSS Root & Responsive Layout Spacing */
@@ -101,7 +100,7 @@
     {{-- Bagian Footer yang akan selalu tampil --}}
     @include('layouts.footer')
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}" defer></script>
     @stack('scripts')
 </body>
 </html>
