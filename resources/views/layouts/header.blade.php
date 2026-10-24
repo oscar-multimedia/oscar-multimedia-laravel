@@ -32,11 +32,31 @@
     .nav-link-custom {
         font-size: 0.95rem;
         font-weight: 500;
-        transition: opacity 0.2s ease, transform 0.2s ease;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: #212529 !important;
     }
 
     .nav-link-custom:hover {
-        opacity: 0.8;
+        background-color: rgba(0, 0, 0, 0.08);
+        color: #000000 !important;
+        transform: translateY(-1px);
+    }
+
+    /* Active pill indicator: clear / semi-translucent tint matching the hover style */
+    .nav-link-custom.active {
+        background-color: rgba(0, 0, 0, 0.14);
+        color: #000000 !important;
+        font-weight: 700;
+    }
+
+    .nav-link-custom.active:hover {
+        background-color: rgba(0, 0, 0, 0.18);
+        color: #000000 !important;
         transform: translateY(-1px);
     }
 
@@ -63,7 +83,8 @@
         }
 
         .nav-link-custom {
-            font-size: 1.05rem;
+            font-size: 1rem;
+            padding: 0.35rem 0.95rem;
         }
     }
 </style>
@@ -78,17 +99,17 @@
             </div>
         </div>
 
-        <!-- Menu Link -->
-        <div class="d-flex align-items-center justify-content-center gap-3 gap-md-4 flex-wrap">
+        <!-- Menu Link dengan Clear Active Pill Indicator -->
+        <div class="d-flex align-items-center justify-content-center gap-2 gap-md-3 flex-wrap">
             <!-- Link Home -->
-            <a class="text-dark d-inline-flex align-items-center text-decoration-none nav-link-custom" href="{{ route('home') }}" title="Beranda">
+            <a class="text-dark d-inline-flex align-items-center text-decoration-none nav-link-custom {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" title="Beranda">
                 <svg class="nav-icon" stroke="currentColor" fill="currentColor" stroke-width="0"
                     viewBox="0 0 576 512" xmlns="http://www.w3.org/2000/svg">
                     <path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"></path>
                 </svg>
             </a>
-            <a class="text-dark text-decoration-none nav-link-custom" href="{{ route('profile') }}">Profile</a>
-            <a class="text-dark text-decoration-none nav-link-custom" href="{{ route('kontak') }}">Alamat & Kontak</a>
+            <a class="text-dark text-decoration-none nav-link-custom {{ request()->routeIs('profile') ? 'active' : '' }}" href="{{ route('profile') }}">Profile</a>
+            <a class="text-dark text-decoration-none nav-link-custom {{ request()->routeIs('kontak') ? 'active' : '' }}" href="{{ route('kontak') }}">Alamat & Kontak</a>
         </div>
     </div>
 </nav>
