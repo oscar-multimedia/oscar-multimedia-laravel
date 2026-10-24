@@ -16,11 +16,11 @@
             "dest": "/public/build/$1"
         },
         {
-            "src": "/(css|js|images)/(.*)",
+            "src": "/(css|js|images|fonts)/(.*)",
             "dest": "/public/$1/$2"
         },
         {
-            "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp))$",
+            "src": "/(.*\\.(ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot|txt))$",
             "dest": "/public/$1"
         },
         {
