@@ -37,6 +37,9 @@
 
                     <div class="carousel-image-container position-relative overflow-hidden d-flex align-items-center justify-content-center">
                         <img src="{{ $imageUrl }}" 
+                             srcset="{{ cloudinary_url($product->foto, 'f_auto,q_auto,w_600,h_250,c_fill') }} 600w,
+                                     {{ cloudinary_url($product->foto, 'f_auto,q_auto,w_1200,h_500,c_fill') }} 1200w"
+                             sizes="(max-width: 768px) 600px, 1200px"
                              alt="{{ $product->nama_produk ?? 'Banner Oscar Multimedia' }}" 
                              class="carousel-img"
                              width="1200" 

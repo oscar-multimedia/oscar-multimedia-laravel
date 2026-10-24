@@ -7,6 +7,9 @@
                 <div class="card h-100 shadow-sm position-relative overflow-hidden hover-card">
 
                     <img src="{{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_350,h_350,c_fill') }}" 
+                         srcset="{{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_200,h_200,c_fill') }} 200w,
+                                 {{ cloudinary_url($produk->foto, 'f_auto,q_auto,w_350,h_350,c_fill') }} 350w"
+                         sizes="(max-width: 576px) 200px, 350px"
                          class="card-img-top product-image"
                          alt="{{ $produk->nama_produk }}"
                          width="350"
