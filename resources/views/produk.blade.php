@@ -311,10 +311,12 @@
                                 
                                 {{-- Overlay tombol detail --}}
                                 <div class="overlay d-flex justify-content-center align-items-center">
-                                    <a href="{{ route('detail', $produk->id) }}" 
-                                       class="btn-card-detail">
-                                        Lihat Detail
-                                    </a>
+                                    <x-product-overlay-button 
+                                        :href="route('detail', $produk->id)"
+                                        label="Lihat Detail"
+                                        mobileLabel="Detail"
+                                        icon="bi bi-eye"
+                                        ariaLabel="Lihat detail {{ $produk->nama_produk }}" />
                                 </div>
                             </div>
 

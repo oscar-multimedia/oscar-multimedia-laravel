@@ -25,13 +25,14 @@
                                                  loading="lazy"
                                                  decoding="async">
                                         </div>
-                                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center p-3">
-                                            <h3 class="product-title text-white fw-bold text-center mb-3 h5">{{ $product->nama_produk }}</h3>
-                                            <a href="{{ route('produk', ['kategori' => $printingId]) }}" 
-                                               class="btn btn-detail rounded-pill px-4 py-2"
-                                               aria-label="Lihat produk digital printing: {{ $product->nama_produk }}">
-                                                <i class="fas fa-eye me-2"></i>Lihat Semua Produk
-                                            </a>
+                                        <div class="overlay position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center p-2 p-md-3">
+                                            <h3 class="product-title text-white fw-bold text-center mb-2 mb-md-3 h5">{{ $product->nama_produk }}</h3>
+                                            <x-product-overlay-button 
+                                                :href="route('produk', ['kategori' => $printingId])"
+                                                label="Lihat Semua Produk"
+                                                mobileLabel="Lihat Semua"
+                                                icon="bi bi-eye"
+                                                ariaLabel="Lihat produk digital printing: {{ $product->nama_produk }}" />
                                         </div>
                                     </div>
                                 </div>
@@ -104,18 +105,25 @@
     }
     .btn-detail {
         background: linear-gradient(135deg, #e8b535 0%, #f4c842 100%);
-        color: #fff;
+        color: #1a1a1a !important;
         border: none;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.9rem;
+        padding: 0.55rem 1.4rem;
+        border-radius: 50px;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(232, 181, 53, 0.3);
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
     }
     .btn-detail:hover {
         background: linear-gradient(135deg, #f4c842 0%, #e8b535 100%);
-        color: #fff;
+        color: #000 !important;
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(232, 181, 53, 0.4);
+        box-shadow: 0 6px 20px rgba(232, 181, 53, 0.45);
     }
     .carousel-item:not(.active) {
         display: none;
@@ -186,7 +194,8 @@
 
     @media (max-width: 768px) {
         .product-grid-card {
-            height: 150px;
+            height: 175px;
+            border-radius: 12px;
         }
 
         /* Menyesuaikan posisi tombol di layar lebih kecil */
@@ -198,18 +207,28 @@
         }
         
         .product-title {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            margin-bottom: 0.35rem !important;
+            padding: 0 0.25rem;
         }
         .btn-detail {
-            font-size: 0.8rem;
-            padding: 0.5rem 1rem;
+            font-size: 0.76rem;
+            padding: 0.35rem 0.85rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
         .section-title {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
     }
 
     @media (max-width: 576px) {
+        .product-grid-card {
+            height: 168px;
+        }
+        .btn-detail {
+            font-size: 0.72rem;
+            padding: 0.3rem 0.75rem;
+        }
         .carousel-control-prev,
         .carousel-control-next {
             display: none; /* Sembunyikan tombol di layar sangat kecil */

@@ -530,9 +530,12 @@
                                      decoding="async">
                                 
                                 <div class="overlay d-flex justify-content-center align-items-center">
-                                    <a href="{{ route('detail', $item->id) }}" class="btn-card-detail">
-                                        Lihat Detail
-                                    </a>
+                                    <x-product-overlay-button 
+                                        :href="route('detail', $item->id)"
+                                        label="Lihat Detail"
+                                        mobileLabel="Detail"
+                                        icon="bi bi-eye"
+                                        ariaLabel="Lihat detail {{ $item->nama_produk }}" />
                                 </div>
                             </div>
 
