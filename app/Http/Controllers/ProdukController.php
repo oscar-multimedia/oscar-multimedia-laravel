@@ -118,6 +118,25 @@ class ProdukController extends Controller
     public function show(Produk $produk)
     {
         $produk->loadMissing('kategori');
-        return view('detail', compact('produk'));
+
+        // Ambil produk terkait dari kategori yang sama, jika kurang ambil produk terbaru lainnya
+        $relatedProducts = Produk::with('kategori')
+            ->where('kategori_id', $produk->kategori_id)
+            ->where('id', '!=', $produk->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        if ($relatedProducts->count() < 4) {
+            $excludeIds = $relatedProducts->pluck('id')->push($produk->id)->all();
+            $additionalProducts = Produk::with('kategori')
+                ->whereNotIn('id', $excludeIds)
+                ->latest()
+                ->take(4 - $relatedProducts->count())
+                ->get();
+            $relatedProducts = $relatedProducts->merge($additionalProducts);
+        }
+
+        return view('detail', compact('produk', 'relatedProducts'));
     }
 }

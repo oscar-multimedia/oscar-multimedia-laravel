@@ -178,9 +178,77 @@
         color: #c99318;
         transform: translateY(-1px);
     }
+
+    /* === Breadcrumb Navigation === */
+    .breadcrumb-wrapper {
+        margin-top: 0.25rem;
+        margin-bottom: 1.5rem;
+    }
+    .custom-breadcrumb {
+        background-color: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        border-radius: 50px;
+        padding: 0.5rem 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        font-size: 0.88rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .custom-breadcrumb a {
+        color: #64748b;
+        text-decoration: none;
+        transition: color 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .custom-breadcrumb a:hover {
+        color: #c4951d;
+    }
+    .custom-breadcrumb .divider {
+        color: #cbd5e1;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+    }
+    .custom-breadcrumb .active-item {
+        color: #1e293b;
+        font-weight: 600;
+        max-width: 240px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
 
 <div class="container content-top-padding">
+    {{-- Breadcrumb Navigation --}}
+    <div class="breadcrumb-wrapper">
+        <nav aria-label="breadcrumb">
+            <div class="custom-breadcrumb">
+                <a href="{{ route('home') }}">
+                    <i class="bi bi-house-door-fill me-1 text-warning"></i>Beranda
+                </a>
+                <span class="divider"><i class="bi bi-chevron-right"></i></span>
+                @if(request('kategori') || request('search'))
+                    <a href="{{ route('produk') }}">Katalog Produk</a>
+                    <span class="divider"><i class="bi bi-chevron-right"></i></span>
+                    <span class="active-item">
+                        @if(request('kategori'))
+                            {{ $kategoris->firstWhere('id', request('kategori'))?->nama_kategori ?? 'Kategori' }}
+                        @elseif(request('search'))
+                            Pencarian: "{{ request('search') }}"
+                        @endif
+                    </span>
+                @else
+                    <span class="active-item">Katalog Produk</span>
+                @endif
+            </div>
+        </nav>
+    </div>
+
     <div class="text-center mb-4 mb-md-5">
         <h1 class="fw-bold">Katalog Produk Kami</h1>
         <p class="lead text-muted">Temukan produk terbaik yang sesuai dengan kebutuhan Anda.</p>
