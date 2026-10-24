@@ -23,13 +23,13 @@
                     </div>
 
                     {{-- Overlay Hover --}}
-                    <div class="hover-overlay d-flex align-items-center justify-content-center">
-                        <a href="{{ route('produk', ['kategori' => $desainId]) }}"
-                           class="btn rounded-pill px-4" 
-                           style="background-color: #e8b535; color: #fff;"
-                           aria-label="Lihat produk desain: {{ $produk->nama_produk }}">
-                            Lihat Semua Produk
-                        </a>
+                    <div class="hover-overlay d-flex align-items-center justify-content-center p-2">
+                        <x-product-overlay-button 
+                            :href="route('produk', ['kategori' => $desainId])"
+                            label="Lihat Semua Produk"
+                            mobileLabel="Lihat Semua"
+                            icon="bi bi-eye"
+                            ariaLabel="Lihat produk desain: {{ $produk->nama_produk }}" />
                     </div>
                 </div>
             </div>

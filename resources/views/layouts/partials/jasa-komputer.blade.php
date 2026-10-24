@@ -55,12 +55,12 @@
              decoding="async">
 
             <div class="jasa-komputer-overlay">
-                <a href="{{ route('produk', ['kategori' => $computerId]) }}"
-                   class="btn px-4 py-2 rounded-pill fw-semibold"
-                   style= "background-color: #e8b535; color: #fff;"
-                   aria-label="Lihat semua produk Service & Accessoris Komputer">
-                    Lihat Semua Produk
-                </a>
+                <x-product-overlay-button 
+                    :href="route('produk', ['kategori' => $computerId])"
+                    label="Lihat Semua Produk"
+                    mobileLabel="Lihat Semua"
+                    icon="bi bi-arrow-right-circle"
+                    ariaLabel="Lihat semua produk Service & Accessoris Komputer" />
             </div>
         </div>
 </section>

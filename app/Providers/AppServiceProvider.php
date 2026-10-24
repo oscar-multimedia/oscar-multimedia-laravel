@@ -63,17 +63,20 @@ class AppServiceProvider extends ServiceProvider
 }
 
 if (!function_exists('cloudinary_url')) {
-    function cloudinary_url($path, $transformations = 'f_webp,q_auto') {
+    function cloudinary_url($path, $transformations = 'f_webp,q_auto:eco') {
         if (!$path) return '';
-        $trans = $transformations ? trim($transformations, '/') : 'f_webp,q_auto';
+        $trans = $transformations ? trim($transformations, '/') : 'f_webp,q_auto:eco';
         $trans = str_replace('f_auto', 'f_webp', $trans);
+        if (str_contains($trans, 'q_auto') && !str_contains($trans, 'q_auto:')) {
+            $trans = str_replace('q_auto', 'q_auto:eco', $trans);
+        }
 
         // Jika path sudah berupa URL Cloudinary lengkap (misal tersimpan di DB)
         if (str_contains($path, 'res.cloudinary.com')) {
-            if (preg_match('#/image/upload/(?:([a-zA-Z0-9_,]+)/)?(.*)$#', $path, $matches)) {
+            if (preg_match('#/image/upload/(?:([a-zA-Z0-9_,:]+)/)?(.*)$#', $path, $matches)) {
                 $firstSegment = $matches[1] ?? '';
-                // Jika sudah ada segment transformasi (mengandung _ atau ,)
-                if ($firstSegment && (str_contains($firstSegment, '_') || str_contains($firstSegment, ','))) {
+                // Jika sudah ada segment transformasi (mengandung _ atau , atau :)
+                if ($firstSegment && (str_contains($firstSegment, '_') || str_contains($firstSegment, ',') || str_contains($firstSegment, ':'))) {
                     return preg_replace('#/image/upload/[^/]+/#', '/image/upload/' . $trans . '/', $path, 1);
                 } else {
                     return preg_replace('#/image/upload/#', '/image/upload/' . $trans . '/', $path, 1);
@@ -87,7 +90,11 @@ if (!function_exists('cloudinary_url')) {
             return $path;
         }
 
-        $cloudName = config('services.cloudinary.cloud_name') ?: env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
+        try {
+            $cloudName = config('services.cloudinary.cloud_name') ?: env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
+        } catch (\Throwable $e) {
+            $cloudName = env('EXTERNAL_S3_CLOUDINARY_NAME', 'wetpkzmj');
+        }
         $cleanPath = ltrim($path, '/');
         return "https://res.cloudinary.com/{$cloudName}/image/upload/{$trans}/{$cleanPath}";
     }
