@@ -13,15 +13,15 @@
                                 <div class="col">
                                     <div class="product-grid-card position-relative overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                                         <div class="image-wrapper">
-                                            <img src="{{ cloudinary_url($product->foto, 'f_webp,q_auto,w_300,h_210,c_fill') }}" 
-                                                 srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto,w_180,h_126,c_fill') }} 180w,
-                                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_260,h_182,c_fill') }} 260w,
-                                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_350,h_245,c_fill') }} 350w"
-                                                 sizes="(max-width: 576px) 170px, 300px"
+                                            <img src="{{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_240,h_168,c_fill') }}" 
+                                                 srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_180,h_126,c_fill') }} 180w,
+                                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_240,h_168,c_fill') }} 240w,
+                                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto:eco,w_300,h_210,c_fill') }} 300w"
+                                                 sizes="(max-width: 576px) 110px, 240px"
                                                  alt="{{ $product->nama_produk }}" 
                                                  class="product-image"
-                                                 width="300"
-                                                 height="210"
+                                                 width="240"
+                                                 height="168"
                                                  loading="lazy"
                                                  decoding="async">
                                         </div>
