@@ -45,7 +45,7 @@
 
         @media (max-width: 767.98px) {
             :root {
-                --navbar-offset: 95px;
+                --navbar-offset: 48px;
             }
         }
 

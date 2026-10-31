@@ -8,7 +8,7 @@
             @foreach($digitalPrintingProducts->chunk(8) as $chunkIndex => $chunk)
                 <div class="carousel-item {{ $chunkIndex == 0 ? 'active' : '' }}">
                     <div class="container-fluid px-lg-5 px-3">
-                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
                             @foreach($chunk as $product)
                                 <div class="col">
                                     <div class="product-grid-card position-relative overflow-hidden" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
