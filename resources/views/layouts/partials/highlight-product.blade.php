@@ -71,8 +71,8 @@
                                            class="badge bg-gold text-dark text-decoration-none fw-bold px-3 py-2 rounded-pill mb-2 d-inline-flex align-items-center shadow-sm">
                                             <i class="bi bi-tag-fill me-1"></i> {{ $kategoriNama }}
                                         </a>
-                                        <h2 class="carousel-product-title text-white fw-bold mb-1">
-                                            <a href="{{ route('detail', $product->id) }}" class="text-white text-decoration-none">
+                                        <h2 class="carousel-product-title fw-bold mb-1">
+                                            <a href="{{ route('detail', $product->id) }}" class="text-decoration-none">
                                                 {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
                                             </a>
                                         </h2>
@@ -108,16 +108,18 @@
     </div>
 </section>
 
-{{-- CSS Styling Carousel Opsi B (Ambient Cinema Backdrop) --}}
+{{-- CSS Styling Carousel (Glass Clear Transparent / Kaca Bening) --}}
 <style>
     #productCarousel {
-        background-color: #111418;
+        background-color: #f1f5f9;
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
     }
 
     .carousel-image-container {
         height: 500px;
         width: 100%;
-        background-color: #111418;
+        background-color: #f1f5f9;
         position: relative;
     }
 
@@ -127,7 +129,7 @@
         }
     }
 
-    /* Ambient Backdrop: Mengisi 100% lebar container dengan blur dinamis */
+    /* Ambient Backdrop: Foto produk asli tetap tampil hidup & kaya warna dengan kedalaman kaca */
     .carousel-backdrop-img {
         position: absolute;
         top: -15%;
@@ -135,15 +137,22 @@
         width: 130%;
         height: 130%;
         object-fit: cover;
-        filter: blur(28px) brightness(0.5);
+        filter: blur(18px) saturate(1.25) brightness(1.04);
+        opacity: 0.75;
         transform: scale(1.1);
         z-index: 1;
         pointer-events: none;
         user-select: none;
+        transition: transform 0.6s ease, filter 0.6s ease;
     }
 
+    /* Lapisan Efek Kaca Bening Transparan (Glass Clear Specular Sheen) */
     .carousel-ambient-tint {
-        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.6) 100%);
+        background: 
+            radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 60%),
+            linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.22) 100%);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
         z-index: 1;
         pointer-events: none;
     }
@@ -162,17 +171,23 @@
         height: auto;
         object-fit: contain;
         display: block;
-        filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
+        filter: drop-shadow(0 16px 32px rgba(15, 23, 42, 0.2));
         transition: transform 0.4s ease;
     }
 
     #productCarousel:hover .carousel-img {
-        transform: scale(1.02);
+        transform: scale(1.03);
     }
 
-    /* Caption Overlay di Bawah */
+    #productCarousel:hover .carousel-backdrop-img {
+        transform: scale(1.14);
+    }
+
+    /* Caption Overlay di Bawah (Frosted Glass Panel Bening) */
     .carousel-caption-bottom {
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.5) 60%, rgba(0, 0, 0, 0) 100%);
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.62) 65%, rgba(255, 255, 255, 0) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         z-index: 5;
         pointer-events: none; /* Kunci agar tidak memblokir tombol panah */
     }
@@ -196,9 +211,19 @@
 
     .carousel-product-title {
         font-size: 1.65rem;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        color: #0f172a;
         max-width: 700px;
         line-height: 1.25;
+        text-shadow: 0 1px 4px rgba(255, 255, 255, 0.85);
+    }
+
+    .carousel-product-title a {
+        color: #0f172a;
+        transition: color 0.2s ease;
+    }
+
+    .carousel-product-title a:hover {
+        color: #b08010 !important;
     }
 
     /* Tombol CTA Detail */
@@ -221,16 +246,16 @@
         width: 48px;
         height: 48px;
         border-radius: 50% !important;
-        background: rgba(255, 255, 255, 0.88) !important;
+        background: rgba(255, 255, 255, 0.92) !important;
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
         color: #1a1a1a !important;
         top: 50%;
         transform: translateY(-50%);
-        z-index: 20 !important; /* Prioritas tinggi agar selalu bisa diklik */
-        opacity: 0.88;
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+        z-index: 20 !important;
+        opacity: 0.92;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         padding: 0;
         display: flex;
@@ -276,8 +301,8 @@
         height: 5px;
         border-radius: 4px;
         border: 0;
-        background-color: rgba(255, 255, 255, 0.5);
-        opacity: 0.7;
+        background-color: rgba(0, 0, 0, 0.18);
+        opacity: 0.6;
         margin: 0 4px;
         transition: all 0.3s ease;
     }
@@ -330,19 +355,20 @@
             font-size: 1.1rem;
         }
 
-        /* Reposisi Indikator Slide ke Pojok Kanan Atas (Gaya Modern Glass Pill Capsule) */
+        /* Reposisi Indikator Slide ke Pojok Kanan Atas (Gaya Modern Glass Pill Capsule - Bening) */
         .carousel-indicators {
             top: 14px !important;
             right: 14px !important;
             bottom: auto !important;
             left: auto !important;
             margin: 0 !important;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             padding: 5px 9px !important;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             z-index: 15;
             display: flex;
             align-items: center;
@@ -354,7 +380,7 @@
             height: 6px;
             border-radius: 50%;
             margin: 0;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(0, 0, 0, 0.22);
             border: 0;
             opacity: 0.7;
             transition: all 0.3s ease;
