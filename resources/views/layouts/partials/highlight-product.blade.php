@@ -72,7 +72,9 @@
                                             <i class="bi bi-tag-fill me-1"></i> {{ $kategoriNama }}
                                         </a>
                                         <h2 class="carousel-product-title text-white fw-bold mb-1">
-                                            {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
+                                            <a href="{{ route('detail', $product->id) }}" class="text-white text-decoration-none">
+                                                {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
+                                            </a>
                                         </h2>
                                     </div>
                                     <div class="caption-action mt-2 mt-sm-0 flex-shrink-0">
@@ -328,13 +330,45 @@
             font-size: 1.1rem;
         }
 
+        /* Reposisi Indikator Slide ke Pojok Kanan Atas (Gaya Modern Glass Pill Capsule) */
+        .carousel-indicators {
+            top: 14px !important;
+            right: 14px !important;
+            bottom: auto !important;
+            left: auto !important;
+            margin: 0 !important;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 5px 9px !important;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
         .carousel-indicators [data-bs-target] {
-            width: 18px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.5);
+            border: 0;
+            opacity: 0.7;
+            transition: all 0.3s ease;
         }
 
         .carousel-indicators .active {
-            width: 32px;
+            width: 18px;
+            border-radius: 10px;
+            background-color: #e8b535;
+            opacity: 1;
+        }
+
+        .carousel-caption-bottom {
+            padding: 0.85rem 1rem 1rem 1rem !important;
         }
     }
 </style>
