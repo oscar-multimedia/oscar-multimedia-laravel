@@ -10,6 +10,7 @@ use App\Models\Profile;
 
 use Illuminate\Support\Facades\Cache;
 use App\Models\Kategori;
+use App\Models\Kontak;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -56,8 +57,17 @@ class AppServiceProvider extends ServiceProvider
                 }
             });
 
+            $sharedKontak = Cache::remember('site_kontak', 3600, function () {
+                try {
+                    return Kontak::first();
+                } catch (\Throwable $e) {
+                    return null;
+                }
+            });
+
             $view->with('profileData', $sharedProfile);
             $view->with('kategoris', $sharedKategoris);
+            $view->with('kontakSite', $sharedKontak);
         });
     }
 }
