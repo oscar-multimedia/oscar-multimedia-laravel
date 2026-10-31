@@ -2,7 +2,7 @@
     @php
         $firstProduct = $carouselProducts->first();
         $firstImageUrl = $firstProduct && $firstProduct->foto 
-            ? cloudinary_url($firstProduct->foto, 'f_webp,q_auto,w_900,h_375,c_fill') 
+            ? cloudinary_url($firstProduct->foto, 'f_webp,q_auto,w_1000,c_limit') 
             : asset('images/default.png');
     @endphp
 
@@ -31,15 +31,18 @@
             @foreach ($carouselProducts as $product)
                 <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                     @php
-                        $imageUrl = $product->foto 
-                                    ? cloudinary_url($product->foto, 'f_webp,q_auto,w_900,h_375,c_fill') 
-                                    : asset('images/default.png');
+                        $backdropImageUrl = $product->foto 
+                                            ? cloudinary_url($product->foto, 'f_webp,q_auto,w_900,h_375,c_fill') 
+                                            : asset('images/default.png');
+                        $mainImageUrl = $product->foto 
+                                        ? cloudinary_url($product->foto, 'f_webp,q_auto,w_1000,c_limit') 
+                                        : asset('images/default.png');
                         $kategoriNama = $product->kategori->nama_kategori ?? 'Oscar Multimedia';
                     @endphp
 
                     <div class="carousel-image-container position-relative overflow-hidden d-flex align-items-center justify-content-center">
                         {{-- 1. Ambient Blurred Backdrop: Mengisi seluruh lebar tanpa ada sisa kosong --}}
-                        <img src="{{ $imageUrl }}" 
+                        <img src="{{ $backdropImageUrl }}" 
                              alt="" 
                              aria-hidden="true" 
                              class="carousel-backdrop-img"
@@ -48,41 +51,51 @@
                         {{-- 2. Ambient Gradient Overlay untuk kontras visual --}}
                         <div class="carousel-ambient-tint position-absolute top-0 start-0 w-100 h-100"></div>
 
-                        {{-- 3. Foto Produk Utama: Tampil tajam, utuh & elegan di tengah dengan drop shadow --}}
-                        <div class="carousel-main-img-wrapper position-relative z-2 d-flex align-items-center justify-content-center w-100 h-100 p-3 p-md-4">
-                            <img src="{{ $imageUrl }}" 
-                                 srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto,w_500,h_210,c_fill') }} 500w,
-                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_900,h_375,c_fill') }} 900w,
-                                         {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_1200,h_500,c_fill') }} 1200w"
-                                 sizes="(max-width: 768px) 100vw, 1200px"
-                                 alt="{{ $product->nama_produk ?? 'Banner Oscar Multimedia' }}" 
-                                 class="carousel-img"
-                                 width="900" 
-                                 height="375"
-                                 @if($loop->first) fetchpriority="high" @else loading="lazy" decoding="async" @endif>
-                        </div>
-
-                        {{-- 4. Caption Overlay di Bawah (Pointer-events controlled agar tidak memblokir tombol panah) --}}
-                        <div class="carousel-caption-bottom position-absolute bottom-0 start-0 end-0 p-3 p-md-4 z-3">
-                            <div class="container-fluid px-2 px-md-3">
-                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-end gap-2">
-                                    <div class="caption-content">
-                                        <a href="#{{ \Illuminate\Support\Str::slug($kategoriNama) }}" 
-                                           class="badge bg-gold text-dark text-decoration-none fw-bold px-3 py-2 rounded-pill mb-2 d-inline-flex align-items-center shadow-sm">
-                                            <i class="bi bi-tag-fill me-1"></i> {{ $kategoriNama }}
-                                        </a>
-                                        <h2 class="carousel-product-title fw-bold mb-1">
-                                            <a href="{{ route('detail', $product->id) }}" class="text-decoration-none">
-                                                {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
-                                            </a>
-                                        </h2>
+                        {{-- 3. Hero Showcase Content (Split 2-Kolom Terpusat, Bebas Tanpa Kartu/Border Kaku) --}}
+                        <div class="carousel-hero-content position-relative z-2 w-100 h-100 d-flex align-items-center justify-content-center">
+                            <div class="container hero-container px-3 px-md-4 h-100">
+                                <div class="row align-items-center justify-content-center h-100 g-3 g-lg-5">
+                                    {{-- Kolom Kiri: Teks & Aksi (Besar, Hidup, & Berani) --}}
+                                    <div class="col-12 col-lg-6 hero-text-col order-2 order-lg-1">
+                                        <div class="hero-text-wrapper">
+                                            <div class="hero-badge-wrap mb-2 mb-md-3">
+                                                <a href="#{{ \Illuminate\Support\Str::slug($kategoriNama) }}" 
+                                                   class="badge bg-gold text-dark text-decoration-none fw-bold px-3 py-2 rounded-pill d-inline-flex align-items-center shadow-sm">
+                                                    <i class="bi bi-tag-fill me-1 text-dark"></i> {{ $kategoriNama }}
+                                                </a>
+                                            </div>
+                                            <h2 class="carousel-product-title fw-bold mb-2 mb-md-3">
+                                                <a href="{{ route('detail', $product->id) }}" class="text-decoration-none">
+                                                    {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
+                                                </a>
+                                            </h2>
+                                            <p class="carousel-product-desc mb-3 mb-md-4 d-none d-md-block">
+                                                {{ $product->deskripsi ? \Illuminate\Support\Str::limit(strip_tags($product->deskripsi), 110) : 'Layanan cetak & merchandise profesional dengan pengerjaan presisi tinggi, rapi, dan material unggulan dari Oscar Multimedia.' }}
+                                            </p>
+                                            <div class="hero-action-wrap">
+                                                <a href="{{ route('detail', $product->id) }}" 
+                                                   class="btn btn-carousel-cta d-inline-flex align-items-center gap-2 fw-bold px-4 py-2 px-md-4 py-md-2 rounded-pill shadow">
+                                                    <span>Lihat Detail Produk</span>
+                                                    <i class="bi bi-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="caption-action mt-2 mt-sm-0 flex-shrink-0">
-                                        <a href="{{ route('detail', $product->id) }}" 
-                                           class="btn btn-carousel-cta d-inline-flex align-items-center gap-2 fw-semibold px-3 py-2 px-md-4 py-md-2 rounded-pill shadow">
-                                            <span>Lihat Detail</span>
-                                            <i class="bi bi-arrow-right"></i>
-                                        </a>
+
+                                    {{-- Kolom Kanan: Foto Produk (Tampil Besar, Utuh, Melayang Bebas) --}}
+                                    <div class="col-12 col-lg-6 hero-media-col order-1 order-lg-2">
+                                        <div class="hero-media-wrapper d-flex align-items-center justify-content-center h-100">
+                                            <a href="{{ route('detail', $product->id) }}" class="d-flex align-items-center justify-content-center text-decoration-none w-100 h-100">
+                                                <img src="{{ $mainImageUrl }}" 
+                                                     srcset="{{ cloudinary_url($product->foto, 'f_webp,q_auto,w_600,c_limit') }} 600w,
+                                                             {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_1000,c_limit') }} 1000w,
+                                                             {{ cloudinary_url($product->foto, 'f_webp,q_auto,w_1400,c_limit') }} 1400w"
+                                                     sizes="(max-width: 768px) 100vw, 1200px"
+                                                     alt="{{ $product->nama_produk ?? 'Banner Oscar Multimedia' }}" 
+                                                     class="carousel-img"
+                                                     @if($loop->first) fetchpriority="high" @else loading="lazy" decoding="async" @endif>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -157,49 +170,76 @@
         pointer-events: none;
     }
 
-    /* Foto Produk Utama */
-    .carousel-main-img-wrapper {
-        z-index: 2;
-        pointer-events: none;
-        padding-bottom: 5.5rem !important; /* Ruang agar gambar leluasa di atas caption bawah */
+    /* Hero Content Area (Centered Content Stage) */
+    .carousel-hero-content {
+        padding: 1.5rem 2rem;
     }
 
-    .carousel-img {
+    .hero-container {
+        max-width: 1020px; /* Terpusat di tengah dengan sisa ruang kiri-kanan yang pas */
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    /* Kolom Teks Desktop */
+    .hero-text-wrapper {
+        text-align: left;
+    }
+
+    .carousel-product-title {
+        font-size: 2.35rem;
+        color: #0f172a;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+    }
+
+    .carousel-product-title a {
+        color: #0f172a;
+        transition: color 0.25s ease;
+    }
+
+    .carousel-product-title a:hover {
+        color: #b08010 !important;
+    }
+
+    .carousel-product-desc {
+        color: #334155;
+        font-size: 1.02rem;
+        line-height: 1.6;
+        font-weight: 450;
+        max-width: 520px;
+    }
+
+    /* Kolom Foto Produk Desktop */
+    .hero-media-wrapper {
+        position: relative;
+        height: 100%;
+        max-height: 420px;
+    }
+
+    .hero-media-wrapper .carousel-img {
         max-width: 92%;
-        max-height: 95%;
+        max-height: 400px;
         width: auto;
         height: auto;
         object-fit: contain;
         display: block;
-        filter: drop-shadow(0 16px 32px rgba(15, 23, 42, 0.2));
-        transition: transform 0.4s ease;
+        filter: drop-shadow(0 20px 40px rgba(15, 23, 42, 0.18));
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     #productCarousel:hover .carousel-img {
-        transform: scale(1.03);
+        transform: scale(1.04) translateY(-4px);
     }
 
     #productCarousel:hover .carousel-backdrop-img {
         transform: scale(1.14);
     }
 
-    /* Caption Overlay di Bawah (Frosted Glass Panel Bening) */
-    .carousel-caption-bottom {
-        background: linear-gradient(to top, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.62) 65%, rgba(255, 255, 255, 0) 100%);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        z-index: 5;
-        pointer-events: none; /* Kunci agar tidak memblokir tombol panah */
-    }
-
-    .carousel-caption-bottom .caption-content,
-    .carousel-caption-bottom .caption-action {
-        pointer-events: auto; /* Tombol dan link tetap interaktif */
-    }
-
     .bg-gold {
         background-color: #e8b535 !important;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         letter-spacing: 0.5px;
         transition: transform 0.2s ease, background-color 0.2s ease;
     }
@@ -209,36 +249,29 @@
         transform: translateY(-1px);
     }
 
-    .carousel-product-title {
-        font-size: 1.65rem;
-        color: #0f172a;
-        max-width: 700px;
-        line-height: 1.25;
-        text-shadow: 0 1px 4px rgba(255, 255, 255, 0.85);
-    }
-
-    .carousel-product-title a {
-        color: #0f172a;
-        transition: color 0.2s ease;
-    }
-
-    .carousel-product-title a:hover {
-        color: #b08010 !important;
-    }
-
     /* Tombol CTA Detail */
     .btn-carousel-cta {
         background: linear-gradient(135deg, #e8b535 0%, #f5cb4e 100%);
         color: #1a1a1a !important;
         border: none;
-        font-size: 0.92rem;
+        font-size: 0.95rem;
+        box-shadow: 0 6px 18px rgba(232, 181, 53, 0.35);
         transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-carousel-cta:hover {
         background: linear-gradient(135deg, #f5cb4e 0%, #e8b535 100%);
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(232, 181, 53, 0.45) !important;
+        box-shadow: 0 10px 25px rgba(232, 181, 53, 0.5) !important;
+        color: #000 !important;
+    }
+
+    .btn-carousel-cta i {
+        transition: transform 0.2s ease;
+    }
+
+    .btn-carousel-cta:hover i {
+        transform: translateX(4px);
     }
 
     /* Tombol Navigasi Panah Modern Floating Glassmorphism */
@@ -313,19 +346,79 @@
         opacity: 1;
     }
 
-    /* Penyesuaian Responsif Mobile */
+    /* Penyesuaian Responsif Tablet */
+    @media (max-width: 991.98px) and (min-width: 768px) {
+        .carousel-image-container {
+            height: 450px;
+        }
+
+        .carousel-hero-content {
+            padding: 1.5rem 2.5rem !important;
+        }
+
+        .carousel-product-title {
+            font-size: 1.85rem;
+        }
+
+        .carousel-product-desc {
+            font-size: 0.95rem;
+            max-width: 100%;
+        }
+
+        .hero-media-wrapper .carousel-img {
+            max-height: 320px;
+        }
+    }
+
+    /* Penyesuaian Responsif Mobile (100% Mengikuti Layout Mobile yang Sudah Bagus) */
     @media (max-width: 767.98px) {
         .carousel-image-container {
             height: 360px;
         }
 
-        .carousel-main-img-wrapper {
-            padding-bottom: 4.5rem !important;
+        .hero-container {
+            max-width: 100% !important;
+            padding: 0 !important;
+        }
+
+        .carousel-hero-content {
+            padding: 1rem 1.25rem 1.25rem 1.25rem !important;
+        }
+
+        .hero-media-col {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 0.5rem;
+        }
+
+        .hero-media-wrapper {
+            height: 100%;
+            width: 100%;
+        }
+
+        .hero-media-wrapper .carousel-img {
+            max-width: 90%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 10px 20px rgba(15, 23, 42, 0.14));
+        }
+
+        .hero-text-col {
+            padding-top: 0.5rem;
+        }
+
+        .hero-text-wrapper {
+            text-align: left;
+            padding-right: 0;
         }
 
         .carousel-product-title {
             font-size: 1.15rem;
             line-height: 1.3;
+            margin-bottom: 0.5rem !important;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.85);
         }
 
         .bg-gold {
