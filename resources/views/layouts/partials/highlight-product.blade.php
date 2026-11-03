@@ -69,9 +69,45 @@
                                                     {{ $product->nama_produk ?? 'Produk Oscar Multimedia' }}
                                                 </a>
                                             </h2>
-                                            <p class="carousel-product-desc mb-3 mb-md-4 d-none d-md-block">
-                                                {{ $product->deskripsi ? \Illuminate\Support\Str::limit(strip_tags($product->deskripsi), 110) : 'Layanan cetak & merchandise profesional dengan pengerjaan presisi tinggi, rapi, dan material unggulan dari Oscar Multimedia.' }}
-                                            </p>
+                                            @php
+                                                $rawDesc = trim(strip_tags((string)$product->deskripsi));
+                                                $descLines = !empty($rawDesc) 
+                                                    ? collect(preg_split('/\r\n|\r|\n/', $rawDesc))
+                                                        ->map(fn($line) => trim($line))
+                                                        ->filter(fn($line) => !empty($line))
+                                                        ->values()
+                                                    : collect();
+
+                                                $isList = $descLines->count() > 1 || ($descLines->count() === 1 && preg_match('/^[-*•]/', $descLines[0]));
+                                            @endphp
+
+                                            @if($descLines->isNotEmpty())
+                                                @if($isList)
+                                                    @php
+                                                        $displayItems = $descLines->take(3);
+                                                        $moreCount = $descLines->count() - 3;
+                                                    @endphp
+                                                    <ul class="carousel-spec-list list-unstyled mb-3 mb-md-4 d-none d-md-flex flex-column gap-2">
+                                                        @foreach($displayItems as $item)
+                                                            <li class="carousel-spec-item d-flex align-items-center gap-2">
+                                                                <i class="bi bi-check-circle-fill spec-icon flex-shrink-0"></i>
+                                                                <span class="spec-text">{{ \Illuminate\Support\Str::limit(ltrim(trim($item), "-*• \t\n\r\0\x0B"), 75) }}</span>
+                                                            </li>
+                                                        @endforeach
+                                                        @if($moreCount > 0)
+                                                            <li class="carousel-spec-more pt-1">
+                                                                <span class="badge bg-light text-secondary border fw-medium px-2 py-1 rounded-pill small">
+                                                                    +{{ $moreCount }} spesifikasi lainnya
+                                                                </span>
+                                                            </li>
+                                                        @endif
+                                                    </ul>
+                                                @else
+                                                    <p class="carousel-product-desc mb-3 mb-md-4 d-none d-md-block">
+                                                        {{ \Illuminate\Support\Str::limit($descLines[0], 115) }}
+                                                    </p>
+                                                @endif
+                                            @endif
                                             <div class="hero-action-wrap">
                                                 <a href="{{ route('detail', $product->id) }}" 
                                                    class="btn btn-carousel-cta d-inline-flex align-items-center gap-2 fw-bold px-4 py-2 px-md-4 py-md-2 rounded-pill shadow">
@@ -209,6 +245,32 @@
         line-height: 1.6;
         font-weight: 450;
         max-width: 520px;
+    }
+
+    .carousel-spec-list {
+        max-width: 520px;
+    }
+
+    .carousel-spec-item {
+        color: #334155;
+        font-size: 0.98rem;
+        line-height: 1.45;
+    }
+
+    .carousel-spec-item .spec-icon {
+        color: #e8b535;
+        font-size: 0.95rem;
+    }
+
+    .carousel-spec-item .spec-text {
+        color: #334155;
+        font-weight: 500;
+    }
+
+    .carousel-spec-more .badge {
+        font-size: 0.78rem;
+        background-color: rgba(255, 255, 255, 0.75) !important;
+        backdrop-filter: blur(4px);
     }
 
     /* Kolom Foto Produk Desktop */
@@ -363,6 +425,14 @@
         .carousel-product-desc {
             font-size: 0.95rem;
             max-width: 100%;
+        }
+
+        .carousel-spec-list {
+            max-width: 100%;
+        }
+
+        .carousel-spec-item {
+            font-size: 0.92rem;
         }
 
         .hero-media-wrapper .carousel-img {
